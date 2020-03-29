@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    background-color: white;
+    font-family: 'Lato', sans-serif;
+}
+
+
+.general-contents {
+    width: 100%;
+    margin: 0 auto;
+    
+}
+
+header {
+    /* max-width: 940px; */
+    /* margin: 0 auto; */
+    padding: 30px;
+    background-color: #111111;
+    box-sizing: border-box;
+}
+
+.nav {
+    width: 940px;
+    margin: 0 auto;
+}
+
+/* === CONTENTS === */
+
+.contents {
+    width: 940px;
+    min-height: 100%;
+    background-color: white;
+    margin: 45px auto;
+}
+
+.contents .item div:nth-child(1) {
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0.2px;
+    font-weight: bold;
+}
+
+.contents .title {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    align-items: center;
+}
+
+.contents h2{
+    font-size: 24px;
+    color: #111111;
+}
+
+.contents .btNav{
+    text-align: right;
+}
+
+.contents .bt_danger{
+    background-color: #DC4747;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    padding: 8px 20px;
+    font-weight: bold;
+}
+
+.contents .bt_primary{
+    background-color: #6558C3;
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    padding: 8px 20px;
+    font-weight: bold;
+}
+
+/* ==== INPUTS ==== */
+
+.contents .item {
+    margin-top: 30px;
+}
+
+input[type="text"],
+textarea {
+    padding: 15px;
+    font-size: 18px;
+    width: 100%;
+    border: 1px solid #DDD;
+    border-radius: 4px;
+    margin-top: 10px;
+    outline: none;
+}
+
+/* === CARDS === */
+.cards{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+}
+
+.card{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    height: 200px;    
+}
+
+.card .card__img{
+    border-radius: 15px;
+}
+
+.card .card__txt {
+    padding-left: 20px;
+    
+}
+
+.card .card__txt h2{
+    font-size: 18px;
+    color: #111111;
+    font-weight: 700;
+}
+
+.card .card__txt h3{
+    font-size: 14px;
+    line-height: 24px;
+    color: #777777;
+    font-weight: normal;
+}
+
+.card .card__txt a{
+    font-size: 14px;
+    line-height: 24px;
+    color: #6558C3;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+/* ==== BANNER ==== */
+
+.banner__img {
+    width: 100%;
+    height: 280px;
+    border-radius: 15px;
+    margin-top: 24px;
+}
+
+.boxTitle {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.boxTitle h1 {
+    font-size: 36px;
+    color: #111111;
+    font-weight: bold;
+}
+
+.boxTitle h3 {
+    font-size: 20px;
+    color: #777777;
+    font-weight: normal;
+}
+
+/* ==== BOX DE INFORMAÇÕES ==== */
+
+.itemDescription{
+    margin-top: 31px;
+}
+
+.boxInfo div:nth-child(1){
+    margin-top: 41px;
+}
+
+.itemDescription h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111111;
+}
+
+.itemDescription .txtItem{
+    margin-top: 19px;
+}
+
+.itemDescription span {
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 28px;
+    color: #444444;
+} 
+
+.item .addItem {
+    font-size: 16px;
+    font-weight: bold;
+    color: #6558c3;
+    margin-top: 15px;
+    cursor: pointer;
+}
+
+
+/* === FOOTER === */
+
+.footer {
+    width: 100%;    
+    background-color: #eeeeee;
+    margin-top: 50px;
+    padding: 26px;
+    position: relative;
+    bottom: 0;
+    box-sizing: border-box;
+}
+
+.footer .footer__txt {
+    text-align: center;
+}

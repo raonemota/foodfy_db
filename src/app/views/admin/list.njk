@@ -1,0 +1,52 @@
+{% extends "./templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Lista</title>
+{% endblock %}
+
+{% block nav %}
+
+    <div class="nav">
+        <div class="links_">
+            <div class="logo"><a href="/"><img src="/imgs/logo_white.png" alt="Logo Foodify"></a></div>
+        </div>
+    </div>
+    
+ {% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+                
+        <div class="title">
+            <h2>Gerenciar receitas</h2>
+            <div class="btNav">
+                <a href="/admin/create"><button class="bt_primary">Adicionar receita</button></a> 
+            </div>
+        </div>
+
+        <div class="cards">
+
+            {% for recipe in recipes %}
+                <div class="card">
+                
+                    <div 
+                        class="card__img"
+                        style="background: url({{ recipe.recipe_img }}) no-repeat center center / cover;">
+                    </div>
+
+                    <div class="card__txt">
+                        <h2>{{ recipe.title }}</h2>
+                        <h3>Cadastrada: {{ recipe.created_at }}</h3>
+                        <a href="/admin/show/{{ recipe.id }}">Visualizar</a>    
+                    </div>
+
+                </div>
+            {% endfor %}
+
+
+        </div>
+
+    </div>
+    
+{% endblock %}

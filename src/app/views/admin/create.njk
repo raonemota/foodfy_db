@@ -1,0 +1,37 @@
+{% extends "./templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Manager</title>
+{% endblock %}
+
+{% block nav %}
+
+    <div class="nav">
+        <div class="links_">
+            <div class="logo"><a href="/"><img src="/imgs/logo_white.png" alt="Logo Foodify"></a></div>
+        </div>
+    </div>
+    
+ {% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <form action="/admin/manager" method="post">
+            <div class="title">
+                <h2>Criar receita</h2>
+                <div class="btNav">
+                    <button class="bt_primary" type="submit">Salvar receita</button>
+                </div>
+            </div>
+
+            {% include "./fields.njk" %}
+
+        </form>
+
+    </div>
+
+    {% include "../addItem.njk" %}
+    
+{% endblock %}

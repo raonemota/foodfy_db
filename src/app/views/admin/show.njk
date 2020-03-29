@@ -1,0 +1,67 @@
+{% extends "./templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Mostrar</title>
+{% endblock %}
+
+{% block nav %}
+
+    <div class="nav">
+        <div class="links_">
+            <div class="logo"><a href="/"><img src="/imgs/logo_white.png" alt="Logo Foodify"></a></div>
+        </div>
+    </div>
+    
+ {% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <div class="title">
+            <h2>Receita: {{ auxRecipe.recipe.title }}</h2>
+            <div class="btNav">
+                <a href="/admin/{{ auxRecipe.recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a> 
+            </div>
+        </div>
+
+        <section 
+            class="banner__img"
+            style="background: url({{ auxRecipe.recipe.recipe_img }}) no-repeat center center / cover;">
+        </section>
+
+        <div class="boxTitle">
+            <h1>{{ auxRecipe.recipe.title }}</h1>
+            <h3>Adicionada: {{ auxRecipe.recipe.created_at }}</h3>
+        </div>
+        <div class="boxInfo">
+            <div class="itemDescription">
+                <h3>Ingredientes</h3>
+                <div class="txtItem">
+                    {% for itemIngredient in auxRecipe.resultsIng %}
+                        <span> - {{ itemIngredient.description }} </span> <br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="itemDescription">
+                <h3>Modo de preparo</h3>
+                <div class="txtItem">
+                    {% for itemSteps in auxRecipe.resultsStep %}
+                        <span> - {{ itemSteps.description }} </span> <br>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="itemDescription">
+                <h3>Informações adicionais</h3>
+                <div class="txtItem">
+                    <span> - {{ auxRecipe.recipe.additional_info }} </span>
+                </div>
+            </div>        
+        </div>
+        
+        
+    </div>
+
+{% endblock %}

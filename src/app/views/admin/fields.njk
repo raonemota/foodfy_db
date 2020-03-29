@@ -1,0 +1,57 @@
+<div class="item">
+    <div>Imagem da receita</div>
+    <div>
+        <input type="text" name="img_recipe" value="{{ recipeComplete.recipe[0].recipe_img }}">
+    </div>
+</div>
+
+<div class="item">
+    <div>Título da receita</div>
+    <div>
+        <input type="text" name="title" value="{{ recipeComplete.recipe[0].title }}">
+    </div>
+</div>
+
+<div class="item">
+    <div>Ingredientes</div>
+    <div id="ingredients">
+        {% if recipeComplete.ingredients[0] == null %}
+            <div class="ingredient">
+                <input type="text" name="ingredients[]" value="" placeholder="Não tem ingredientes cadastrados" />
+            </div>   
+        {% else %}
+            
+            {% for itemIngred in recipeComplete.ingredients %}
+            <div class="ingredient">
+                <input type="text" name="ingredients[]" value="{{itemIngred.description}}" />
+            </div>
+            {% endfor %}
+        {% endif %}    
+    </div>
+    <button type="button" class="add-ingredient addItem">Adicionar ingrediente</button>            
+</div>
+
+<div class="item">
+    <div>Modo de preparo</div>
+    <div id="steps">
+        {% if recipeComplete.methods[0] == null %}
+            <div class="step">
+                <input type="text" name="method_of_preparation[]" value="" />
+            </div>   
+        {% else %}
+            {% for itemStep in recipeComplete.methods %}
+            <div class="step">
+                <input type="text" name="method_of_preparation[]" value="{{itemStep.description}}" />
+            </div>
+            {% endfor %}
+        {% endif %}    
+    </div>
+    <button type="button" class="add-step addItem">Adicionar passos</button>
+</div>
+
+<div class="item">
+    <div>Informações adicionais</div>
+    <div>
+        <textarea name="aditional_info" rows="5">{{ recipeComplete.recipe[0].additional_info }} </textarea>
+    </div>
+</div>
