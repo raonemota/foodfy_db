@@ -1,11 +1,36 @@
-const fs = require('fs')
-const data = require('../../../data.json')
 const db = require('../../config/db')
 const { date } = require('../../lib/utils')
 
 const Recipe = require('../models/Recipes')
 
 module.exports = {
+    index(req, res){
+
+        let { filter, page, limit } = req.query
+
+        page = page || 1
+        limit = limit || 6
+        let offset = limit * (page - 1)
+
+        const params = {
+            filter,
+            page,
+            limit,
+            offset,
+            callback(recipes){
+                const pagination = {
+                    total: Math.ceil(recipes[0].total / limit),
+                    page
+                }
+
+                return res.render("./revenue", { recipes, pagination, filter})
+
+            }
+        }
+
+        Recipe.paginate(params)
+
+    },
     list(req, res){
 
         Recipe.all(function callback(recipes){
@@ -20,10 +45,17 @@ module.exports = {
     show(req, res){
         const { id } = req.params
 
-       Recipe.find(id, function callback(auxRecipe){
+        Recipe.find(id, function callback(auxRecipe){
            return res.render("admin/show", {auxRecipe} )
-       })
+        })
 
+    },
+    showRecipe(req, res){
+        const { id } = req.params
+
+        Recipe.find(id, function callback(auxRecipe){
+           return res.render("show", {auxRecipe} )
+        })
     },
     post(req, res){
         const keys = Object.keys(req.body)

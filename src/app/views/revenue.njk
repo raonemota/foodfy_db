@@ -7,24 +7,44 @@
             <a href="/about">Sobre</a>
             <a class="active" href="/revenue">Receitas</a>
         </div>
+        {# Form de busca de receita #}
+        <form action="revenue" method="GET">
+            <input 
+                type="text"
+                name="filter"
+                placeholder="Procurar"
+                value=""
+            >
+            <button type="submit">Filtrar</button>
+        </form>
     </div>
  {% endblock %}
 
 {% block content %}
 
-    <div class="cards">
+    <div class="contents">
+    
+        <h1>Receitas</h1>
 
-                {% for item in food %}
-                    <div class="card" id="{{ item.name }}">
-                    <img src="{{ item.img_url }}">
+        {% if (filter != '') and (recipes[0].total == 0) %}
+            <div style='margin-top: 30px;'> Não foram encontrados receitas com base na sua pesquisa. {{filter}} </div>
+        {% endif %}
+
+        <div class="cards">
+
+            {% for item in recipes %}
+                <div class="card">
+                    <a href="/show/{{item.id}}">
+                        <div 
+                            class="card__img" 
+                            style="background: url({{ item.recipe_img }}) no-repeat center center / cover;">
+                        </div>
+                    </a>
                     <h2>{{ item.title }}</h1>
-                    <h3>{{ item.author }}</h3>
-                    </div> 
-                {% endfor %}
-                
-            </div>
-
-        </section> 
+                </div> 
+            {% endfor %}
+            
+        </div> 
 
         <div class="modal-overlay">
             <div class="modal">
@@ -34,6 +54,8 @@
                 <div class="modal__close"><a class="close-modal">Fechar modal</a></div>
             </div>
         </div>
+
+    </div>
     
 {% endblock %}
                

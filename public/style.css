@@ -28,7 +28,7 @@ header {
 
 .nav {
     display: grid;
-    grid-template-columns: 1fr 5fr;
+    grid-template-columns: 100px 1fr 1fr 100px;
 }
 
 .nav a{
@@ -37,6 +37,22 @@ header {
     padding: 0 20px;
     text-decoration: none;
     color: black;
+}
+
+.nav form input[type="text"] {
+    border: 1px solid #eee;
+    padding: 8px 8px;
+    border-radius: 3px;
+    width: 75%;
+}
+
+.nav form button {
+    padding: 8px 16px;
+    background-color: #e4b3ac;
+    text-transform: uppercase;
+    border-radius: 8px;
+    color: white
+    
 }
 
 .nav .active{
@@ -56,8 +72,8 @@ header {
 }
 
 #btManager{
-    padding: 8px;
-    background-color: e4b3ac;
+    padding: 4px 6px;
+    background-color: #e4b3ac;
     color: white;
     position: absolute;
     top: 0;
@@ -102,6 +118,32 @@ header {
     top: 66px;
 }
 
+/* ==== BANNER SHOW ==== */
+
+.banner__img {
+    width: 100%;
+    height: 280px;
+    border-radius: 15px;
+    margin-top: 24px;
+}
+
+.boxTitle {
+    margin-top: 50px;
+    text-align: center;
+}
+
+.boxTitle h1 {
+    font-size: 36px;
+    color: #111111;
+    font-weight: bold;
+}
+
+.boxTitle h3 {
+    font-size: 20px;
+    color: #777777;
+    font-weight: normal;
+}
+
 
 /* === MOST ACESSED === */
 
@@ -114,34 +156,70 @@ header {
     font-weight: bold;
 }
 
-.cards{
+.contents .cards{
     margin-top: 20px;
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 20px;
 }
 
-.card{
+.contents .card{
     max-width: 300px;
 }
 
-.card img{
-    width: 100%;
-    border-radius: 15px;
-    cursor: pointer;
-}
-
-.card h2{
+.contents .card h2{
     font-size: 18px;
-    margin-top: 20px;
+    margin-top: 10px;
     font-weight: bold;
 }
 
-.card h3{
+.contents .card h3{
     font-size: 14px;
     color: #777777;
     font-weight: 300;
     margin-top: 5px;
+}
+
+.card .card__img{
+    border-radius: 15px;
+    height: 200px;
+    cursor: pointer;
+    width: 100%;
+}
+
+/* ==== BOX DE INFORMAÇÕES ==== */
+
+.itemDescription{
+    margin-top: 31px;
+}
+
+.boxInfo div:nth-child(1){
+    margin-top: 41px;
+}
+
+.itemDescription h3 {
+    font-size: 24px;
+    font-weight: bold;
+    color: #111111;
+}
+
+.itemDescription .txtItem{
+    margin-top: 19px;
+}
+
+.itemDescription span {
+    font-size: 18px;
+    font-weight: normal;
+    line-height: 28px;
+    color: #444444;
+} 
+
+.item .addItem {
+    font-size: 16px;
+    font-weight: bold;
+    color: #6558c3;
+    margin-top: 15px;
+    cursor: pointer;
 }
 
 /* === FOOTER === */

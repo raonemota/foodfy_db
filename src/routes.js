@@ -2,8 +2,6 @@ const express = require('express')
 const routes = express.Router()
 const recipes = require('./app/controllers/recipes')
 
-const food = require('../data')
-
 routes.get('/', function(req, res){
     return res.render("index")
 })
@@ -12,9 +10,8 @@ routes.get('/about', function(req, res){
     return res.render("about")
 })
 
-routes.get('/revenue', function(req, res){
-    return res.render("revenue", { food })
-})
+routes.get('/revenue', recipes.index)
+routes.get('/show/:id', recipes.showRecipe)
 
 
 /* ===== ROUTES MANAGEMENT ===== */

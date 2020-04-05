@@ -185,6 +185,48 @@ module.exports = {
 
             })
 
+    },
+    paginate(params){
+        
+        const { filter, limit, offset, callback } = params
+
+        let query = "",
+        filterQuery = "",
+        totalQuery = '(SELECT count(*) FROM recipes) AS total'
+
+        if ( filter ) {
+
+            filterQuery = `${query}
+                    WHERE recipes.title ILIKE '%${filter}%'`
+            
+            totalQuery = `(
+                SELECT count(*) 
+                FROM recipes ${filterQuery}) AS total`
+
+        }
+
+        query = `SELECT recipes.*, ${totalQuery}
+                    FROM recipes
+                    ${filterQuery}
+                    LIMIT $1 OFFSET $2
+                `
+                db.query(query, [limit, offset], function(err, results){
+                    if (err) throw 'Paginate - Database Error!'
+
+                    //Verifica se tem foi retornado alguma receita
+                    if (results.rowCount == 0) {
+                        const results = [{
+                            total: 0
+                        }]
+                        
+                        callback(results)
+                        //console.log(teste)
+                    }else{
+                        callback(results.rows)
+                    }
+
+                })
+
     }
 
 }
