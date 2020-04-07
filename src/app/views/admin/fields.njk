@@ -1,27 +1,27 @@
 <div class="item">
     <div>Imagem da receita</div>
     <div>
-        <input type="text" name="img_recipe" value="{{ recipeComplete.recipe[0].recipe_img }}">
+        <input type="text" name="img_recipe" value="{{ recipe.recipe_img }}">
     </div>
 </div>
 
 <div class="item">
     <div>Título da receita</div>
     <div>
-        <input type="text" name="title" value="{{ recipeComplete.recipe[0].title }}">
+        <input type="text" name="title" value="{{ recipe.title }}">
     </div>
 </div>
 
 <div class="item">
     <div>Ingredientes</div>
     <div id="ingredients">
-        {% if recipeComplete.ingredients[0] == null %}
+        {% if ingreds[0] == null %}
             <div class="ingredient">
                 <input type="text" name="ingredients[]" value="" placeholder="Não tem ingredientes cadastrados" />
             </div>   
         {% else %}
             
-            {% for itemIngred in recipeComplete.ingredients %}
+            {% for itemIngred in ingreds %}
             <div class="ingredient">
                 <input type="text" name="ingredients[]" value="{{itemIngred.description}}" />
             </div>
@@ -34,12 +34,12 @@
 <div class="item">
     <div>Modo de preparo</div>
     <div id="steps">
-        {% if recipeComplete.methods[0] == null %}
+        {% if steps[0] == null %}
             <div class="step">
                 <input type="text" name="method_of_preparation[]" value="" />
             </div>   
         {% else %}
-            {% for itemStep in recipeComplete.methods %}
+            {% for itemStep in steps %}
             <div class="step">
                 <input type="text" name="method_of_preparation[]" value="{{itemStep.description}}" />
             </div>
@@ -52,6 +52,6 @@
 <div class="item">
     <div>Informações adicionais</div>
     <div>
-        <textarea name="aditional_info" rows="5">{{ recipeComplete.recipe[0].additional_info }} </textarea>
+        <textarea name="aditional_info" rows="5">{{ recipe.additional_info }} </textarea>
     </div>
 </div>

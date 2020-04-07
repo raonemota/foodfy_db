@@ -19,26 +19,26 @@
     <div class="contents">
 
         <div class="title">
-            <h2>Receita: {{ auxRecipe.recipe.title }}</h2>
+            <h2>Receita: {{ recipe.title }}</h2>
             <div class="btNav">
-                <a href="/admin/{{ auxRecipe.recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a> 
+                <a href="/admin/{{ recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a> 
             </div>
         </div>
 
         <section 
             class="banner__img"
-            style="background: url({{ auxRecipe.recipe.recipe_img }}) no-repeat center center / cover;">
+            style="background: url({{ recipe.recipe_img }}) no-repeat center center / cover;">
         </section>
 
         <div class="boxTitle">
-            <h1>{{ auxRecipe.recipe.title }}</h1>
-            <h3>Adicionada: {{ auxRecipe.recipe.created_at }}</h3>
+            <h1>{{ recipe.title }}</h1>
+            <h3>Adicionada: {{ recipe.created_at }}</h3>
         </div>
         <div class="boxInfo">
             <div class="itemDescription">
                 <h3>Ingredientes</h3>
                 <div class="txtItem">
-                    {% for itemIngredient in auxRecipe.resultsIng %}
+                    {% for itemIngredient in ingreds %}
                         <span> - {{ itemIngredient.description }} </span> <br>
                     {% endfor %}
                 </div>
@@ -47,7 +47,7 @@
             <div class="itemDescription">
                 <h3>Modo de preparo</h3>
                 <div class="txtItem">
-                    {% for itemSteps in auxRecipe.resultsStep %}
+                    {% for itemSteps in steps %}
                         <span> - {{ itemSteps.description }} </span> <br>
                     {% endfor %}
                 </div>
@@ -56,7 +56,7 @@
             <div class="itemDescription">
                 <h3>Informações adicionais</h3>
                 <div class="txtItem">
-                    <span> - {{ auxRecipe.recipe.additional_info }} </span>
+                    <span> - {{ recipe.additional_info }} </span>
                 </div>
             </div>        
         </div>

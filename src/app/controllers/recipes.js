@@ -42,42 +42,102 @@ module.exports = {
     create(req, res){
         return res.render('admin/create')
     }, 
-    show(req, res){
+    async show(req, res){
         const { id } = req.params
 
-        Recipe.find(id, function callback(auxRecipe){
-           return res.render("admin/show", {auxRecipe} )
-        })
+        //Pega a receita na base de dados
+        results = await Recipe.findRecipe(id)
+
+        //Formata data
+        const recipe = {
+            ...results.rows[0],
+            created_at: date(results.rows[0].created_at).iso
+        }  
+
+        //Pega os ingredientes com base no ID da receita
+        results = await Recipe.findIngred(recipe.id)
+        const ingreds = results.rows
+
+        //Pega as etapas para preparação com base no ID da receita
+        results = await Recipe.findSteps(recipe.id)
+        const steps = results.rows
+
+        return res.render("admin/show", { recipe, ingreds, steps } )
 
     },
-    showRecipe(req, res){
+    async showRecipe(req, res){
         const { id } = req.params
 
-        Recipe.find(id, function callback(auxRecipe){
-           return res.render("show", {auxRecipe} )
-        })
+        //Pega a receita na base de dados
+        results = await Recipe.findRecipe(id)
+
+        //Formata data
+        const recipe = {
+            ...results.rows[0],
+            created_at: date(results.rows[0].created_at).iso
+        }  
+
+        //Pega os ingredientes com base no ID da receita
+        results = await Recipe.findIngred(recipe.id)
+        const ingreds = results.rows
+
+        //Pega as etapas para preparação com base no ID da receita
+        results = await Recipe.findSteps(recipe.id)
+        const steps = results.rows
+
+        return res.render("show", { recipe, ingreds, steps } )
+
     },
-    post(req, res){
+    async post(req, res){
         const keys = Object.keys(req.body)
 
         for(key of keys){
+            
             if(req.body[key] == ""){
-                return res.send("Please, fill all fields!!")
+                return res.send(`Please. fill all fields!`)
             }
         }
-        
-        Recipe.create(req.body, function callback(){
-            return res.redirect('create')
-        })
 
+        //Cadastra receita principal
+        result = await Recipe.create(req.body)
+        const id = result.rows[0].id
+
+        //Cadastra todas os ingredientes cadastrados
+        const ingredientes = req.body.ingredients     
+        const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, id))
+        await Promise.all(addIngredPromise)
+        
+        //Cadastra todas os etapas cadastradas
+        const steps = req.body.method_of_preparation     
+        const addStepsPromise = steps.map(step => Recipe.createSteps(step, id))
+        await Promise.all(addStepsPromise)
+
+        return res.redirect(`list`)
+        
+        
     },
-    edit(req, res){
+    async edit(req, res){
         
         const { id } = req.params
 
-        Recipe.findRecipe(id, function callback(recipeComplete){
-            return res.render('admin/edit', { recipeComplete })
-        })
+        //Pega a receita na base de dados
+        results = await Recipe.findRecipe(id)
+
+        //Formata data
+        const recipe = {
+            ...results.rows[0],
+            created_at: date(results.rows[0].created_at).iso
+        }      
+
+        //Pega os ingredientes com base no ID da receita
+        results = await Recipe.findIngred(recipe.id)
+        const ingreds = results.rows
+
+        //Pega as etapas para preparação com base no ID da receita
+        results = await Recipe.findSteps(recipe.id)
+        const steps = results.rows
+
+        return res.render('admin/edit', { recipe, ingreds, steps })
         
     },
     put(req, res){
@@ -86,7 +146,7 @@ module.exports = {
 
         for(key of keys){
             if(req.body[key] == ""){
-                return res.send("Please. fill all fields!")
+                return res.send(`Please. fill all fields!${req.body[key]}`)
             }
         }
 
