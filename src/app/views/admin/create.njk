@@ -18,7 +18,7 @@
 
     <div class="contents">
 
-        <form action="/admin/manager" method="post">
+        <form method="POST" action="/admin/create" enctype="multipart/form-data">
             <div class="title">
                 <h2>Criar receita</h2>
                 <div class="btNav">
@@ -34,4 +34,6 @@
 
     {% include "../addItem.njk" %}
     
+    <script src="../scripts.js"></script>
+
 {% endblock %}

@@ -21,7 +21,8 @@
         <div class="title">
             <h2>Gerenciar receitas</h2>
             <div class="btNav">
-                <a href="/admin/create"><button class="bt_primary">Adicionar receita</button></a> 
+                <div><a href="../"><i class="material-icons">arrow_back</i></a></div>
+                <div><a href="/admin/create"><button class="bt_primary">Adicionar receita</button></a></div>
             </div>
         </div>
 
@@ -30,9 +31,8 @@
             {% for recipe in recipes %}
                 <div class="card">
                 
-                    <div 
-                        class="card__img"
-                        style="background: url({{ recipe.recipe_img }}) no-repeat center center / cover;">
+                    <div class="card__img">
+                        <img src="{{ recipe.recipe_img }}" alt="">
                     </div>
 
                     <div class="card__txt">

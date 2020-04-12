@@ -1,5 +1,7 @@
 const express = require('express')
 const routes = express.Router()
+const multer = require('./app/middlewares/multer')
+
 const recipes = require('./app/controllers/recipes')
 
 routes.get('/', function(req, res){
@@ -21,10 +23,10 @@ routes.get('/admin/manager', function(req, res){
 })
 
 routes.get('/admin/create', recipes.create)
-routes.post('/admin/manager', recipes.post)
 routes.get('/admin/show/:id', recipes.show)
 routes.get('/admin/:id/edit/', recipes.edit)
-routes.put('/admin/edit', recipes.put)
+routes.post('/admin/create', multer.array("photos", 6), recipes.post)
+routes.put('/admin/edit', multer.array("photos", 6), recipes.put)
 routes.get('/admin/list', recipes.list)
 
 

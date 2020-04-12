@@ -21,14 +21,25 @@
         <div class="title">
             <h2>Receita: {{ recipe.title }}</h2>
             <div class="btNav">
-                <a href="/admin/{{ recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a> 
+                <div><a href="/admin/list"><i class="material-icons">arrow_back</i></a></div>
+                <div><a href="/admin/{{ recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a></div>
             </div>
         </div>
 
-        <section 
-            class="banner__img"
-            style="background: url({{ recipe.recipe_img }}) no-repeat center center / cover;">
-        </section>
+        <div class="banner__img">
+            <img src="{{files[0].src}}" alt="">
+        </div>
+
+        <div class="gallery-preview">
+                {% if files %}
+                    {% for image in files %}
+                        <div class="photo" id="{{image.id}}">
+                            <img src="{{image.src}}" alt="{{image.name}}">
+                            <i></i>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+        </div>
 
         <div class="boxTitle">
             <h1>{{ recipe.title }}</h1>

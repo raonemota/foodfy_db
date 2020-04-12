@@ -1,7 +1,31 @@
 <div class="item">
     <div>Imagem da receita</div>
-    <div>
-        <input type="text" name="img_recipe" value="{{ recipe.recipe_img }}">
+    
+    <div id="photos-preview">
+        
+        <div class="photo photo-add">
+            <i class="material-icons">add</i>
+            <input 
+                id="photos-input"
+                type="file" 
+                name="photos" 
+                multiple
+                accept="image/*"
+                onchange="PhotosUpload.handleFileInput(event)"
+                >
+        </div>
+
+        {% if files %}
+            {% for image in files %}
+                <div class="photo" id="{{image.id}}">
+                    <img src="{{image.src}}" alt="{{image.name}}">
+                    <i class="material-icons"
+                        onclick="PhotosUpload.removeOldPhoto(event)">delete</i>
+                </div>
+            {% endfor %}
+            <input type="hidden" name="removed_files">
+        {% endif %}
+
     </div>
 </div>
 
@@ -22,10 +46,11 @@
         {% else %}
             
             {% for itemIngred in ingreds %}
-            <div class="ingredient">
+            <div class="ingredient" id="{{itemIngred.id}}">
                 <input type="text" name="ingredients[]" value="{{itemIngred.description}}" />
             </div>
             {% endfor %}
+
         {% endif %}    
     </div>
     <button type="button" class="add-ingredient addItem">Adicionar ingrediente</button>            
