@@ -10,7 +10,7 @@ module.exports = {
         const query = `INSERT INTO recipes (
                             title,
                             additional_info,
-                            created_at) VALUES ( $1, $2, $3, $4) 
+                            created_at) VALUES ( $1, $2, $3) 
                         RETURNING id `
 
         const values = [
@@ -25,18 +25,15 @@ module.exports = {
     createIngred(ingred, id_recipe){
 
         //Insere na base de dados os ingredientes
-        db.query(`INSERT INTO ingred_recipes (
-                        description,
-                        id_recipe ) VALUES ($1, $2)`, [ingred, id_recipe])
+        db.query(`INSERT INTO ingred_recipes (description, id_recipe) 
+                    VALUES ($1, $2)`, [ingred, id_recipe])
 
     },
     createSteps(steps, id){
 
         //Insere na base de dados as etapas de preparo
-        return db.query(`INSERT INTO method_of_preparation (
-            description,
-            id_recipe                        
-            ) VALUES ($1, $2)`, [steps, id])
+        return db.query(`INSERT INTO method_of_preparation (description, id_recipe) 
+                            VALUES ($1, $2)`, [steps, id])
 
     },
     findRecipe(id){
@@ -51,8 +48,8 @@ module.exports = {
     updateRecipe(data){
                 
         //Atualiza os dados principais da receita
-        const query = `UPDATE recipes SET title=($2), additional_info=($3)
-                            WHERE id = ($4)`
+        const query = `UPDATE recipes SET title=($1), additional_info=($2)
+                            WHERE id = ($3)`
 
                     const values = [
                         data.title,
@@ -71,7 +68,7 @@ module.exports = {
     },
     paginate(params){
         
-        const { filter, limit, offset, callback } = params
+        const { filter } = params
 
         let query = "",
         filterQuery = "",
@@ -91,31 +88,13 @@ module.exports = {
         query = `SELECT recipes.*, ${totalQuery}
                     FROM recipes
                     ${filterQuery}
-                    LIMIT $1 OFFSET $2
                 `
-                db.query(query, [limit, offset], function(err, results){
-                    if (err) throw 'Paginate - Database Error!'
-
-                    //Verifica se tem foi retornado alguma receita
-                    if (results.rowCount == 0) {
-                        const results = [{
-                            total: 0
-                        }]
-                        
-                        callback(results)
-                        
-                    }else{
-                        callback(results.rows)
-                    }
-
-                })
+        
+        return db.query(query)
 
     },
     files(id){
         return db.query(`SELECT * FROM files WHERE id_recipe = $1`, [id])
-    },
-    fileSingle(id){
-        return db.query(`SELECT * FROM files WHERE id_recipe = $1 LIMIT 1`, [id])
     }
 
 }

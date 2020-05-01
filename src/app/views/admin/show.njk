@@ -34,8 +34,12 @@
                 {% if files %}
                     {% for image in files %}
                         <div class="photo" id="{{image.id}}">
-                            <img src="{{image.src}}" alt="{{image.name}}">
-                            <i></i>
+                            <img 
+                                src="{{image.src}}" 
+                                alt="{{image.name}}"
+                                class="active"
+                                onclick=ImageGallery.setImage(event)
+                            >
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -74,5 +78,7 @@
         
         
     </div>
+
+<script src="/scripts.js"></script>
 
 {% endblock %}

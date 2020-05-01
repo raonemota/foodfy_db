@@ -1,11 +1,10 @@
-const db = require('../../config/db')
 const { date } = require('../../lib/utils')
 
 const Recipe = require('../models/Recipes')
 const File = require('../models/File')
 
 module.exports = {
-    index(req, res){
+    async index(req, res){
 
         let { filter, page, limit } = req.query
 
@@ -17,39 +16,51 @@ module.exports = {
             filter,
             page,
             limit,
-            offset,
-            callback(recipes){
-                const pagination = {
-                    total: Math.ceil(recipes[0].total / limit),
-                    page
-                }
-
-                return res.render("./revenue", { recipes, pagination, filter})
-
-            }
+            offset
         }
 
-        Recipe.paginate(params)
+        let results = await Recipe.paginate(params)
+
+        async function getImage(recipeId){
+            let results = await Recipe.files(recipeId)
+            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            return files[0]
+        }
+
+        const recipesPromise = results.rows.map(async recipe => {
+            recipe.img = await getImage(recipe.id)
+            recipe.created_at = date(recipe.created_at).iso
+            return recipe
+        })
+
+        const recipes = await Promise.all(recipesPromise)     
+        
+        return res.render("./revenue", { recipes, filter})
 
     },
     async list(req, res){
 
-        results = await Recipe.all()
-        const aux_recipes = results.rows.map(recipe => ({
-            ...recipe,
-            created_at: date(recipe.created_at).iso
-        }))
-        await Promise.all(aux_recipes)
+        let results = await Recipe.all()
+        const recipes = results.rows
+        
+        if (!recipes) return res.send("Não foram encontrados receitas")
 
-        imgs = []
-        for (item of aux_recipes){
-            result = await Recipe.fileSingle(item.id)
-            imgs.push(result.rows)
+        async function getImage(recipeId){
+            let results = await Recipe.files(recipeId)
+            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            
+            return files[0]
         }
+
+        const recipesPromise = recipes.map(async recipe => {
+            recipe.img = await getImage(recipe.id)
+            recipe.created_at = date(recipe.created_at).iso
+            return recipe
+        })
+
+        const allRecipes = await Promise.all(recipesPromise)         
         
-        console.log(imgs)        
-        
-        return res.render('admin/list', { aux_recipes } )
+        return res.render('admin/list', { recipes: allRecipes } )
        
     },
     create(req, res){
@@ -90,10 +101,18 @@ module.exports = {
         //Pega a receita na base de dados
         results = await Recipe.findRecipe(id)
 
+        async function getImage(recipeId){
+            let results = await Recipe.files(recipeId)
+            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+           
+            return files[0]
+        }       
+
         //Formata data
         const recipe = {
             ...results.rows[0],
-            created_at: date(results.rows[0].created_at).iso
+            created_at: date(results.rows[0].created_at).iso,
+            img: await getImage(results.rows[0].id)
         }  
 
         //Pega os ingredientes com base no ID da receita
@@ -104,7 +123,13 @@ module.exports = {
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 
-        return res.render("show", { recipe, ingreds, steps } )
+        results = await Recipe.files(recipe.id)
+        const files = results.rows.map(file => ({
+            ...file,
+            path: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
+        }))        
+        
+        return res.render("show", { recipe, ingreds, steps, files } )
 
     },
     async post(req, res){
@@ -184,8 +209,9 @@ module.exports = {
 
         //Verifica se todos os campos estao preenchidos
         for(key of keys){
-            if(req.body[key] == ""){
-                return res.send(`Please. fill all fields!${req.body[key]}`)
+            
+            if(key != 'removed_files' && req.body[key] == ""){
+                return res.send(`Please. fill all fields!`)
             }
         }
 

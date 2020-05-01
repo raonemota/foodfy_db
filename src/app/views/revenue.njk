@@ -17,6 +17,11 @@
             >
             <button type="submit">Filtrar</button>
         </form>
+        <div class="links">
+            <a id="btManager" href="./admin/list">
+                <i class="material-icons">settings_applications</i>
+            </a>
+        </div>
     </div>
  {% endblock %}
 
@@ -35,9 +40,8 @@
             {% for item in recipes %}
                 <div class="card">
                     <a href="/show/{{item.id}}">
-                        <div 
-                            class="card__img" 
-                            style="background: url({{ item.recipe_img }}) no-repeat center center / cover;">
+                        <div class="card__img">
+                            <img src="{{ item.img }}" alt="">
                         </div>
                     </a>
                     <h2>{{ item.title }}</h1>

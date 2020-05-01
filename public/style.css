@@ -121,14 +121,52 @@ header {
 /* ==== BANNER SHOW ==== */
 
 .banner__img {
+    margin-top: 24px;
+}
+
+.banner__img img{
     width: 100%;
     height: 280px;
     border-radius: 15px;
     margin-top: 24px;
+    object-fit: cover;
 }
 
+/*  ==== GALLERY PREVIEW === */
+
+.gallery-preview{
+    width: 100%;
+}
+
+.gallery-preview img{
+    width: 100%;
+    border-radius: 4px;
+
+    opacity: 1;
+}
+
+.gallery-preview .photo {
+    position: relative;
+    width: 120px;
+    object-fit: cover;
+    float: right;
+    margin-left: 10px;
+    margin-top: 10px;
+
+    cursor: pointer;
+
+    transition: 300ms;
+}
+
+.gallery-preview .photo:hover{
+    opacity: 0.7;
+    transition: 300ms;
+}
+
+/* === BOX DE INFORMAÇÕES === */
+
 .boxTitle {
-    margin-top: 50px;
+    margin-top: 100px;
     text-align: center;
 }
 
@@ -180,11 +218,12 @@ header {
     margin-top: 5px;
 }
 
-.card .card__img{
+.card .card__img img{
     border-radius: 15px;
     height: 200px;
     cursor: pointer;
     width: 100%;
+    object-fit: cover;
 }
 
 /* ==== BOX DE INFORMAÇÕES ==== */

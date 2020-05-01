@@ -12,7 +12,7 @@
             <a class="active" href="/revenue">Receitas</a>
         </div>
         {# Form de busca de receita #}
-        <form action="revenue" method="GET">
+        <form action="/revenue" method="GET">
             <input 
                 type="text"
                 name="filter"
@@ -21,6 +21,11 @@
             >
             <button type="submit">Filtrar</button>
         </form>
+        <div class="links">
+            <a id="btManager" href="./admin/list">
+                <i class="material-icons">settings_applications</i>
+            </a>
+        </div>
     </div>
  {% endblock %}
 
@@ -32,10 +37,24 @@
             <h2>Receita: {{ recipe.title }}</h2>
         </div>
 
-        <section 
-            class="banner__img"
-            style="background: url({{ recipe.recipe_img }}) no-repeat center center / cover;">
-        </section>
+        <div class="banner__img">
+            <img src="{{recipe.img}}" alt="">
+        </div>
+
+        <div class="gallery-preview">
+                {% if files %}
+                    {% for image in files %}
+                        <div class="photo">
+                            <img 
+                                src="{{image.path}}" 
+                                alt="{{image.name}}"
+                                class="active"
+                                onclick=ImageGallery.setImage(event)
+                            >
+                        </div>
+                    {% endfor %}
+                {% endif %}
+        </div>
 
         <div class="boxTitle">
             <h1>{{ recipe.title }}</h1>
@@ -70,5 +89,7 @@
         
         
     </div>
+
+<script src="/scripts.js"></script>
 
 {% endblock %}
