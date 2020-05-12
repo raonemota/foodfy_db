@@ -1,0 +1,50 @@
+<script>
+    function addIngredient() {
+
+        const ingredients = document.querySelector("#ingredients");
+        const fieldContainer = document.querySelectorAll(".ingredient");
+
+        // Realiza um clone do último ingrediente adicionado
+        const newField = fieldContainer[fieldContainer.length - 1].cloneNode(true);
+
+        // Não adiciona um novo input se o último tem um valor vazio
+        if (newField.children[0].value == ""){
+            alert("Preencha o campo acima para inserir um novo!")
+            return false;
+        
+        }
+
+        // Deixa o valor do input vazio
+        newField.children[0].value = "";
+        ingredients.appendChild(newField);
+    }
+
+    function addSteps() {
+
+        const steps = document.querySelector("#steps");
+        const fieldContainerStep = document.querySelectorAll(".step");
+
+        // Realiza um clone do último ingrediente adicionado
+        const newFieldStep = fieldContainerStep[fieldContainerStep.length - 1].cloneNode(true);
+
+        // Não adiciona um novo input se o último tem um valor vazio
+        if (newFieldStep.children[0].value == ""){
+            alert("Preencha o campo acima para inserir um novo!")
+            return false;
+        
+        }
+
+        // Deixa o valor do input vazio
+        newFieldStep.children[0].value = "";
+        steps.appendChild(newFieldStep);
+    }
+
+    document
+    .querySelector(".add-ingredient")
+    .addEventListener("click", addIngredient);
+
+    document
+    .querySelector(".add-step")
+    .addEventListener("click", addSteps);
+
+</script>

@@ -13,15 +13,13 @@
     <body>
         <section class="general-contents">
             <header> 
-                {% block nav %}{% endblock %}
+                {% include "./parts/header.njk" %}
             </header>
 
             {% block content %}{% endblock %}      
         </section>
         
-        <div class="footer">
-            <div class="footer__txt">Todos os direitos reservados pelo Foodfy</div>
-        </div>
+        {% include "./parts/footer.njk" %}
 
     </body>
         

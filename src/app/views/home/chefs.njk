@@ -1,0 +1,34 @@
+{% extends "./layout.njk" %}
+
+{% block content %}
+
+    <div class="contents">
+                
+        <div class="cardsChefs">
+
+        {% if chefs == '' %}
+            <div><span>Não foram encontrado chefes cadastrados no sistema.</span></div>
+        {% endif %}
+
+        {% for chef in chefs %}
+            <div class="cardChef">
+            
+                <div class="chef__img">
+                    <img src="{{ chef.avatar_url }}" alt="">
+                </div>
+
+                <div class="chef__txt">
+                    <h2>{{ chef.name }}</h2>
+                    <h3>{{ chef.total }} receitas</h3>
+                    
+                </div>
+
+            </div>
+        {% endfor %}
+
+
+        </div>
+
+    </div>
+    
+{% endblock %}

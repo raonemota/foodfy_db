@@ -1,0 +1,35 @@
+{% extends "../templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Editar</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+        <form id="save" action="/admin/edit?_method=PUT" method="POST" enctype="multipart/form-data">
+            <div class="title">
+                <h2>Editando receita</h2>
+                
+                <div class="btNav">
+                    <button form="delete" class="bt_danger" type="submit">APAGAR</button>
+                    <button form="save" class="bt_primary" type="submit">SALVAR</button>
+                </div>
+            </div>
+
+            {% include "./fields.njk" %}
+
+            <input type="hidden" name="id" value="{{ recipe.id }}">
+        </form>
+
+        <form id="delete" action="/admin/edit?_method=DELETE" method="POST">
+            <input type="hidden" name="id" value="{{ recipe.id }}">
+        </form>
+
+    </div>
+
+    {% include "./addItem.njk" %}
+
+    <script src="/scripts.js"></script>
+    
+{% endblock %}

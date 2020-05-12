@@ -1,0 +1,45 @@
+{% extends "../templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Chefes</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+                
+        <div class="title">
+            <h2>Gerenciar chefs</h2>
+            <div class="btNav">
+                <div><a href="/chefs/create"><button class="bt_primary">Adicionar chef</button></a></div>
+            </div>
+        </div>
+
+        <div class="cardsChefs">
+
+        {% if chefs == '' %}
+            <div><span>Não foram encontrado chefes cadastrados no sistema.</span></div>
+        {% endif %}
+
+        {% for chef in chefs %}
+            <div class="cardChef">
+            
+                <div class="chef__img">
+                    <img src="{{ chef.avatar_url }}" alt="">
+                </div>
+
+                <div class="chef__txt">
+                    <h2>{{ chef.name }}</h2>
+                    <div class="link"><a href="/chefs/show/{{ chef.id }}">Visualizar</a></div>
+                    
+                </div>
+
+            </div>
+        {% endfor %}
+
+
+        </div>
+
+    </div>
+    
+{% endblock %}

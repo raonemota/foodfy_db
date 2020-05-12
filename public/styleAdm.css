@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap');
 
 * {
     margin: 0;
@@ -29,6 +29,23 @@ header {
 .nav {
     width: 940px;
     margin: 0 auto;
+    display: flex;
+}
+
+.nav .links{
+    margin-left: 30px;;
+}
+
+.nav .links ul li {
+    display: inline-block;
+    padding: 0px 8px;
+}
+
+.nav .links ul li a{
+    color: #777777;
+
+
+    text-decoration: none;
 }
 
 /* === CONTENTS === */
@@ -59,11 +76,9 @@ header {
 }
 
 .contents .btNav{
-    text-align: right;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    align-items: center;
-    justify-items: end;
+    width: auto;
+    justify-self: end;
+    display: flex;
 }
 
 .contents .btNav i:first-child {
@@ -80,6 +95,7 @@ header {
     font-size: 14px;
     padding: 8px 20px;
     font-weight: bold;
+    cursor: pointer;
 }
 
 .contents .bt_primary{
@@ -90,6 +106,7 @@ header {
     padding: 8px 20px;
     font-weight: bold;
     cursor: pointer;
+    margin-left: 20px;
 }
 
 /* ==== INPUTS ==== */
@@ -99,7 +116,8 @@ header {
 }
 
 input[type="text"],
-textarea {
+textarea,
+select {
     padding: 15px;
     font-size: 18px;
     width: 100%;
@@ -206,7 +224,7 @@ textarea {
 .card{
     display: grid;
     grid-template-columns: 1fr 1fr;
-    height: 200px;    
+    height: 140px;    
 }
 
 .card .card__img img{
@@ -215,8 +233,7 @@ textarea {
 }
 
 .card .card__txt {
-    padding-left: 20px;
-    
+    padding-left: 20px; 
 }
 
 .card .card__txt h2{
@@ -352,3 +369,92 @@ textarea {
 .footer .footer__txt {
     text-align: center;
 }
+
+/* === CHEFES === */
+
+.cardsChefs{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    
+}
+
+.cardChef{
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    height: 64px;  
+    align-items: center;
+}
+
+.cardChef .chef__img{
+    width: 64px;
+    height: 64px;
+}
+
+.cardChef .chef__img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.cardChef .chef__txt{
+    padding-left: 20px;
+    
+}
+
+.cardChef .chef__txt h2{
+    font-size: 18px; 
+    font-weight: normal;
+}
+
+.cardChef .chef__txt a{
+    font-size: 14px; 
+    font-weight: bold;
+
+    color: #6558C3;
+    text-decoration: none;
+}
+
+.cardChef .chef__txt .link{
+    margin-top: 10px;
+}
+
+/* === AVATAR CHEF === */
+
+.contentAvatar{
+    width: 100%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+.contentAvatar .imgAvatar{
+    margin: 0 auto;
+    width: 200px;
+    height: 200px;
+}
+
+.contentAvatar .imgAvatar img{
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+
+}
+
+.contentAvatar h2{
+    font-size: 36px;
+    margin-top: 30px;
+    text-align: center;
+}
+
+.contentAvatar h3{
+    font-size: 20px;
+    margin-top: 4px;
+    text-align: center;
+    color: #777777;
+}
+
+
+

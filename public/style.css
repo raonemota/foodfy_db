@@ -32,9 +32,9 @@ header {
 }
 
 .nav a{
-    font-size: 15px;
-    line-height: 25px;
-    padding: 0 20px;
+    font-size: 16px;
+    line-height: 26px;
+    padding: 0 15px;
     text-decoration: none;
     color: black;
 }
@@ -48,9 +48,9 @@ header {
 
 .nav form button {
     padding: 8px 16px;
-    background-color: #e4b3ac;
+    background-color: #6558C3;
     text-transform: uppercase;
-    border-radius: 8px;
+    border-radius: 4px;
     color: white
     
 }
@@ -69,11 +69,12 @@ header {
 
 .nav .links{
     position: relative;
+    padding-left: 50px;
 }
 
 #btManager{
     padding: 4px 6px;
-    background-color: #e4b3ac;
+    background-color: #6558C3;
     color: white;
     position: absolute;
     top: 0;
@@ -207,8 +208,8 @@ header {
 
 .contents .card h2{
     font-size: 18px;
-    margin-top: 10px;
-    font-weight: bold;
+    margin-top: 20px;
+    font-weight: normal;
 }
 
 .contents .card h3{
@@ -220,7 +221,7 @@ header {
 
 .card .card__img img{
     border-radius: 15px;
-    height: 200px;
+    height: 140px;
     cursor: pointer;
     width: 100%;
     object-fit: cover;
@@ -360,5 +361,62 @@ header {
     font-weight: lighter;
     cursor: pointer;
     margin-bottom: 30px;
+}
+
+/* === CHEFES === */
+
+.cardsChefs{
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    
+}
+
+.cardChef{
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    height: 64px;  
+    align-items: center;
+}
+
+.cardChef .chef__img{
+    width: 64px;
+    height: 64px;
+}
+
+.cardChef .chef__img img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.cardChef .chef__txt{
+    padding-left: 20px;
+    
+}
+
+.cardChef .chef__txt h2{
+    font-size: 18px; 
+    font-weight: normal;
+    margin-top: 5px;
+}
+
+.cardChef .chef__txt h3{
+    font-size: 12px; 
+    font-weight: normal;
+}
+
+.cardChef .chef__txt a{
+    font-size: 14px; 
+    font-weight: bold;
+
+    color: #6558C3;
+    text-decoration: none;
+}
+
+.cardChef .chef__txt .link{
+    margin-top: 10px;
 }
 

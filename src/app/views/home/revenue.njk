@@ -1,0 +1,38 @@
+{% extends "./layout.njk" %}
+
+{% block content %}
+
+    <div class="contents">
+
+        {% if (filter != '') %}
+            <h1>Buscando por "{{ filter }}"</h1>
+        {% else %}
+            <h1>Receitas</h1>
+        {% endif %}
+        
+        {% if (filter != '') and (recipes == '') %}
+            <div style='margin-top: 30px;'> Não foram encontrados receitas com base na sua pesquisa. {{filter}} </div>
+        {% endif %}
+
+        <div class="cards">
+
+            {% for item in recipes %}
+                <div class="card">
+                    <a href="/show/{{item.id}}">
+                        <div class="card__img">
+                            <img src="{{ item.img }}" alt="">
+                        </div>
+                    </a>
+                    <h2>{{ item.title }}</h2>
+                    <h3>Por {{ item.chefname }}</h3>
+                </div> 
+            {% endfor %}
+            
+        </div> 
+
+    </div>
+    
+{% endblock %}
+               
+            
+        

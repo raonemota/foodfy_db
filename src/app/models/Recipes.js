@@ -10,13 +10,15 @@ module.exports = {
         const query = `INSERT INTO recipes (
                             title,
                             additional_info,
-                            created_at) VALUES ( $1, $2, $3) 
+                            created_at,
+                            id_chef) VALUES ( $1, $2, $3, $4) 
                         RETURNING id `
 
         const values = [
             data.title,
             data.aditional_info,
             date(Date.now()).format,
+            data.chef
         ]
 
         return db.query(query, values)
@@ -37,7 +39,10 @@ module.exports = {
 
     },
     findRecipe(id){
-        return db.query(`SELECT * FROM recipes WHERE id = $1`, [id] )
+        return db.query(`SELECT R.*, C.name as chef FROM recipes AS R
+                            INNER JOIN chefs AS C
+                            ON C.id = R.id_chef
+                            where R.id = $1`, [id] )
     },
     findIngred(id){
         return db.query(`SELECT * FROM ingred_recipes WHERE id_recipe = $1`, [id])
@@ -48,17 +53,21 @@ module.exports = {
     updateRecipe(data){
                 
         //Atualiza os dados principais da receita
-        const query = `UPDATE recipes SET title=($1), additional_info=($2)
-                            WHERE id = ($3)`
+        const query = `UPDATE recipes SET title=($1), additional_info=($2), id_chef=($3)
+                            WHERE id = ($4)`
 
-                    const values = [
-                        data.title,
-                        data.aditional_info,
-                        data.id
-                    ]
+        const values = [
+            data.title,
+            data.aditional_info,
+            data.chef,
+            data.id
+        ]
 
-            return db.query(query, values)
+        return db.query(query, values)
 
+    },
+    deleteRecipe(id){        
+        db.query(`DELETE FROM recipes WHERE id = ($1)`, [id])
     },
     deleteIngreds(id){
         db.query(`DELETE FROM ingred_recipes WHERE id_recipe = ($1)`, [id])
@@ -85,13 +94,25 @@ module.exports = {
 
         }
 
-        query = `SELECT recipes.*, ${totalQuery}
+        query = `SELECT recipes.*, ${totalQuery}, chefs.name as chefname
                     FROM recipes
+                    INNER JOIN chefs
+                    ON recipes.id_chef = chefs.id
                     ${filterQuery}
                 `
-        
+
         return db.query(query)
 
+    },
+    findRecipesMoreAccessed(){
+        query = `SELECT recipes.*, chefs.name as chefname FROM recipes
+                    INNER JOIN chefs
+                    ON recipes.id_chef = chefs.id
+                    LIMIT 6`
+        return db.query(query)
+    },
+    findRecipesPerChef(id){
+        return db.query(`SELECT * FROM recipes WHERE id_chef = $1`, [id])
     },
     files(id){
         return db.query(`SELECT * FROM files WHERE id_recipe = $1`, [id])

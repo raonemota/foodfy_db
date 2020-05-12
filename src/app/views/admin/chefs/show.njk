@@ -1,0 +1,58 @@
+{% extends "../templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Mostrar</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <div class="title">
+            <div>
+                <h2>Chef: {{ chef.name }}</h2>
+            </div>
+            <div class="btNav">
+                <a href="/chefs/{{ chef.id }}/edit"><button class="bt_primary" type="submit">Editar Chef</button></a>
+            </div>
+        </div>
+
+        <div class="contentAvatar">
+            <div class="imgAvatar">
+                <img src="{{chef.avatar_url}}" alt="">
+            </div>
+            <h2>{{chef.name}}</h2> 
+            <h3>{{totalRecipes}} receitas</h3> 
+        </div> 
+
+        <h1>Receitas</h1>
+
+        {% if (recipes == '') %}
+            <div style='margin-top: 30px;'> Não foram encontrados receitas cadastrada.</div>
+        {% endif %}
+
+        <div class="cards">
+
+            {% for recipe in recipes %}
+                <div class="card">
+                
+                    <div class="card__img">
+                        <img src="{{ recipe.img }}" alt="">
+                    </div>
+
+                    <div class="card__txt">
+                        <h2>{{ recipe.title }}</h2>
+                        <h3>Cadastrada: {{ recipe.created_at }}</h3>
+                        <a href="/admin/show/{{ recipe.id }}">Visualizar</a>    
+                    </div>
+
+                </div>
+            {% endfor %}
+
+        </div>    
+        
+    </div>
+
+<script src="/scripts.js"></script>
+
+{% endblock %}

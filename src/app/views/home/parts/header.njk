@@ -1,0 +1,24 @@
+    <div class="nav">
+        <div class="logo"><a href="/"><img src="/imgs/logo.png" alt="Logo Foodify"></a></div>
+        <div class="links">
+            <a href="/about">Sobre</a>
+            <a href="/revenue">Receitas</a>
+            <a href="/chefs">Chefs</a>
+        </div>
+        {# Form de busca de receita #}
+        <form action="revenue" method="GET">
+            <input 
+                type="text"
+                name="filter"
+                placeholder="Buscar uma receita"
+                value=""
+            >
+            <button type="submit">Buscar</button>
+        </form>
+        <div class="links">
+            <a id="btManager" href="/admin/list">
+                <i class="material-icons">settings_applications</i>
+            </a>
+        </div>
+        
+    </div>

@@ -1,0 +1,29 @@
+{% extends "../templateAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Manager</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <form method="POST" action="/admin/create" enctype="multipart/form-data">
+            <div class="title">
+                <h2>Criar receita</h2>
+                <div class="btNav">
+                    <button class="bt_primary" type="submit">Salvar receita</button>
+                </div>
+            </div>
+
+            {% include "./fields.njk" %}
+
+        </form>
+
+    </div>
+
+    {% include "./addItem.njk" %}
+    
+    <script src="../scripts.js"></script>
+
+{% endblock %}

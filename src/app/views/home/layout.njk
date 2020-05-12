@@ -1,0 +1,30 @@
+<html>
+    <head>
+
+        {% block head %}
+            <title>Foodify - Página Inicial</title>
+        {% endblock %}
+        
+        <meta name="description" content="Site onde você encontra as melhores receitas" >
+        <link href="/style.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    </head>
+    <body>
+        <section class="general-contents">
+            <header>
+
+            {% include "./parts/header.njk" %}
+                
+            </header>
+
+            {% block content %}{% endblock %}
+        
+        </section>
+
+        <div class="footer">
+            <div class="footer__txt">Todos os direitos reservados pelo Foodfy</div>
+        </div>
+
+    </body>
+    {# <script src="scripts.js"></script>#}
+</html>

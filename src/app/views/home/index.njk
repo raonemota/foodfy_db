@@ -1,0 +1,38 @@
+{% extends "./layout.njk" %}
+
+{% block content %}
+    <div class="banner">
+        <div class="banner__txts">
+            <h1>As melhores receitas</h1>
+            <h2>Aprenda a construir os melhores pratos com receitas criadas por profissionais do mundo inteiro.</h2>
+        </div>            
+        <img src="imgs/chef.png" alt="Chefe de cozinha desenho">
+    </div>
+
+    <div class="contents">
+
+        <h1>Mais acessados</h1>
+
+        {% if (recipes == '') %}
+            <div style='margin-top: 30px;'> Não foram encontrados receitas cadastrada.</div>
+        {% endif %}
+
+        <div class="cards">
+
+            {% for item in recipes %}
+                <div class="card">
+                    <a href="/show/{{item.id}}">
+                        <div class="card__img">
+                            <img src="{{ item.img }}" alt="">
+                        </div>
+                    </a>
+                    <h2>{{ item.title }}</h2>
+                    <h3>Por {{ item.chefname }}</h3>
+                </div> 
+            {% endfor %}
+            
+        </div> 
+        
+    </div>
+
+{% endblock %}    
