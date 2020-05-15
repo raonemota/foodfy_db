@@ -1,0 +1,30 @@
+/*  ==== GALLERY PREVIEW === */
+
+.gallery-preview{
+    width: 100%;
+
+    img{
+        width: 100%;
+        border-radius: 4px;
+    
+        opacity: 1;
+    }
+
+    .photo {
+        position: relative;
+        width: 120px;
+        object-fit: cover;
+        float: right;
+        margin-left: 10px;
+        margin-top: 10px;
+    
+        cursor: pointer;
+    
+        transition: 300ms;
+
+        &:hover{
+            opacity: 0.7;
+            transition: 300ms;
+        }
+    }
+}

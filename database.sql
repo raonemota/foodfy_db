@@ -1,3 +1,6 @@
+DROP DATABASE IF EXISTS recipesmanager;
+CREATE DATABASE recipesmanager;
+
 CREATE TABLE "chefs" (
   "id" SERIAL PRIMARY KEY,
   "name" varchar,
@@ -36,3 +39,32 @@ ALTER TABLE "method_of_preparation" ADD FOREIGN KEY ("id_recipe") REFERENCES "re
 ALTER TABLE "files" ADD FOREIGN KEY ("id_recipe") REFERENCES "recipes" ("id") ON DELETE CASCADE;
 ALTER TABLE "ingred_recipes" ADD FOREIGN KEY ("id_recipe") REFERENCES "recipes" ("id") ON DELETE CASCADE;
 ALTER TABLE "recipes" ADD FOREIGN KEY ("id_chef") REFERENCES "chefs" ("id") ON DELETE CASCADE;
+
+CREATE TABLE "users" (
+  "id" SERIAL PRIMARY KEY,
+  "name" varchar NOT NULL,
+  "email" varchar UNIQUE NOT NULL,
+  "password" TEXT NOT NULL,
+  "reset_token" TEXT,
+  "reset_token_expires" TEXT,
+  "is_admin" BOOLEAN DEFAULT false,
+  "created_at" timestamp DEFAULT(now()),
+  "created_at" timestamp DEFAULT(now())
+);
+
+-- Foreign Key
+ALTER TABLE "recipes" ADD FOREIGN KEY ("id_user") REFERENCES "users" ("id");
+
+-- Procedure
+CREATE FUNCTION trigger_set_timestamp()
+RETURNS TRIGGER AS $$
+BEGIN
+  NEW.updated_at = NOW();
+END;
+$$ LANGUAGE plpgsql;
+
+-- Auto updated_at user
+CREATE TRIGGER trigger_set_timestamp
+BEFORE UPDATE ON users
+FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();

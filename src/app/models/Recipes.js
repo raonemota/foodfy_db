@@ -11,14 +11,17 @@ module.exports = {
                             title,
                             additional_info,
                             created_at,
-                            id_chef) VALUES ( $1, $2, $3, $4) 
+                            id_chef,
+                            id_user) VALUES ( $1, $2, $3, $4, $5) 
                         RETURNING id `
 
         const values = [
             data.title,
             data.aditional_info,
             date(Date.now()).format,
-            data.chef
+            data.chef,
+            1
+            
         ]
 
         return db.query(query, values)

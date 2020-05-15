@@ -1,0 +1,46 @@
+.nav {
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 100px;
+
+    a{
+        font-size: 16px;
+        line-height: 26px;
+        padding: 0 15px;
+        text-decoration: none;
+        color: black;
+
+        &:hover{
+            color: rgb(70, 7, 49);
+        }
+    }
+
+    .logo a{
+        padding: 0;
+    }
+
+    form input[type="text"] {
+        border: 1px solid #eee;
+        padding: 8px 8px;
+        border-radius: 3px;
+        width: 75%;
+    }
+
+    form button {
+        padding: 8px 16px;
+        background-color: $primary-color;
+        text-transform: uppercase;
+        border-radius: 4px;
+        color: white;
+        cursor: pointer;
+    }
+
+    .active{
+        font-weight: bold;
+    }
+
+    .links{
+        position: relative;
+        padding-left: 50px;
+    }
+
+}

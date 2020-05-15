@@ -1,0 +1,378 @@
+@charset "UTF-8";
+@import url("https://fonts.googleapis.com/css2?family=Lato:wght@400;700&family=Roboto:wght@400;700&display=swap");
+* {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body {
+  background-color: white;
+  font-family: 'Roboto', sans-serif;
+}
+
+header {
+  max-width: 940px;
+  margin: 0 auto;
+  padding: 30px;
+  padding-left: 0px;
+  padding-bottom: 0px;
+  padding-right: 0px;
+}
+
+.general-contents {
+  width: 940px;
+  margin: 0 auto;
+  min-height: 100%;
+}
+
+.nav {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 100px 1fr 1fr 100px;
+      grid-template-columns: 100px 1fr 1fr 100px;
+}
+
+.nav a {
+  font-size: 16px;
+  line-height: 26px;
+  padding: 0 15px;
+  text-decoration: none;
+  color: black;
+}
+
+.nav a:hover {
+  color: #460731;
+}
+
+.nav .logo a {
+  padding: 0;
+}
+
+.nav form input[type="text"] {
+  border: 1px solid #eee;
+  padding: 8px 8px;
+  border-radius: 3px;
+  width: 75%;
+}
+
+.nav form button {
+  padding: 8px 16px;
+  background-color: #6558C3;
+  text-transform: uppercase;
+  border-radius: 4px;
+  color: white;
+  cursor: pointer;
+}
+
+.nav .active {
+  font-weight: bold;
+}
+
+.nav .links {
+  position: relative;
+  padding-left: 50px;
+}
+
+/* === BANNER HOME PAGE === */
+.banner {
+  border-radius: 30px;
+  background-color: #FBDFDB;
+  height: 366px;
+  position: relative;
+  margin-top: 30px;
+}
+
+.banner__txts {
+  width: 305px;
+  position: absolute;
+  top: 117px;
+  left: 60px;
+}
+
+.banner__txts h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+  font-weight: bold;
+}
+
+.banner__txts h2 {
+  opacity: 0.7;
+  font-weight: 300;
+  font-size: 18px;
+  line-height: 28px;
+  color: #000000;
+}
+
+.banner img {
+  position: absolute;
+  right: 100px;
+  top: 66px;
+}
+
+/* === BANNER SHOW PAGE === */
+.banner__img {
+  margin-top: 24px;
+}
+
+.banner__img img {
+  width: 100%;
+  height: 280px;
+  border-radius: 15px;
+  margin-top: 24px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+/*  ==== GALLERY PREVIEW === */
+.gallery-preview {
+  width: 100%;
+}
+
+.gallery-preview img {
+  width: 100%;
+  border-radius: 4px;
+  opacity: 1;
+}
+
+.gallery-preview .photo {
+  position: relative;
+  width: 120px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  float: right;
+  margin-left: 10px;
+  margin-top: 10px;
+  cursor: pointer;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+.gallery-preview .photo:hover {
+  opacity: 0.7;
+  -webkit-transition: 300ms;
+  transition: 300ms;
+}
+
+/* === CONTENTS === */
+.contents {
+  margin-top: 50px;
+}
+
+.contents h1 {
+  font-size: 24px;
+  color: #111111;
+}
+
+.contents h2 {
+  font-size: 20px;
+  color: #111111;
+  margin-top: 30px;
+}
+
+.contents p {
+  margin-top: 20px;
+  font-size: 18px;
+  line-height: 28px;
+  color: #444444;
+}
+
+.contents .cards {
+  margin-top: 20px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 1fr 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
+  gap: 20px;
+}
+
+.contents .card {
+  max-width: 300px;
+}
+
+.contents .card h2 {
+  font-size: 18px;
+  margin-top: 20px;
+  font-weight: normal;
+}
+
+.contents .card h3 {
+  font-size: 14px;
+  color: #777777;
+  font-weight: 300;
+  margin-top: 5px;
+}
+
+.contents .card img {
+  width: 100%;
+  border-radius: 15px;
+  cursor: pointer;
+}
+
+.itemDescription {
+  margin-top: 31px;
+  line-height: 1.8;
+}
+
+/* === BOX DE INFORMAÇÕES === */
+.boxTitle {
+  margin-top: 100px;
+  text-align: center;
+}
+
+.boxTitle h1 {
+  font-size: 36px;
+  color: #111111;
+  font-weight: bold;
+}
+
+.boxTitle h3 {
+  font-size: 20px;
+  color: #777777;
+  font-weight: normal;
+}
+
+/* === MODAL === */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.7);
+  width: 100%;
+  height: 100%;
+  top: 0;
+  position: fixed;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.modal-overlay.active {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  background-color: white;
+  border-radius: 16px;
+  width: 660px;
+  margin: 0 auto;
+  margin-top: 140px;
+  text-align: center;
+}
+
+.modal img {
+  padding: 30px;
+  border-radius: 45px;
+  padding-bottom: 0;
+}
+
+.modal h2 {
+  font-size: 24px;
+  color: #111111;
+  text-align: center;
+  margin-top: 20px;
+}
+
+.modal h3 {
+  font-size: 18px;
+  font-weight: 300;
+  color: #111111;
+  margin-top: 5px;
+}
+
+.modal__close {
+  margin-bottom: 30px;
+  margin-top: 60px;
+  position: relative;
+  padding-bottom: 30px;
+}
+
+.close-modal {
+  font-size: 16px;
+  color: #999999;
+  font-weight: lighter;
+  cursor: pointer;
+  margin-bottom: 30px;
+}
+
+#btManager {
+  padding: 4px 6px;
+  background-color: #6558C3;
+  color: white;
+  position: absolute;
+  top: 0;
+  right: 0;
+  border-radius: 8px;
+}
+
+/* === CHEFES === */
+.cardsChefs {
+  margin-top: 30px;
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: (1fr)[4];
+      grid-template-columns: repeat(4, 1fr);
+  gap: 30px;
+}
+
+.cardChef {
+  display: -ms-grid;
+  display: grid;
+  -ms-grid-columns: 64px 1fr;
+      grid-template-columns: 64px 1fr;
+  height: 64px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+
+.cardChef .chef__img {
+  width: 64px;
+  height: 64px;
+}
+
+.cardChef .chef__img img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+}
+
+.cardChef .chef__txt {
+  padding-left: 20px;
+}
+
+.cardChef .chef__txt h2 {
+  font-size: 18px;
+  font-weight: normal;
+  margin-top: 5px;
+}
+
+.cardChef .chef__txt h3 {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+.cardChef .chef__txt a {
+  font-size: 14px;
+  font-weight: bold;
+  color: #6558C3;
+  text-decoration: none;
+}
+
+.cardChef .chef__txt .link {
+  margin-top: 10px;
+}
+
+/* === FOOTER === */
+.footer {
+  width: 100%;
+  background-color: #eeeeee;
+  margin-top: 50px;
+  padding: 26px;
+  position: relative;
+  bottom: 0;
+}
+
+.footer .footer__txt {
+  text-align: center;
+}
+/*# sourceMappingURL=main.css.map */

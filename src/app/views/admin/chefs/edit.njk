@@ -1,4 +1,4 @@
-{% extends "../templateAdmin.njk" %}
+{% extends "../layoutAdmin.njk" %}
 
 {% block head %}
     <title>Foodify - Editar</title>
@@ -7,22 +7,22 @@
 {% block content %}
 
         <div class="contents">
-        <form id="save" action="/chefs/edit?_method=PUT" method="POST" enctype="multipart/form-data">
-            <div class="title">
-                <h2>Editando chef</h2>
-                
-                <div class="btNav">
-                    <button form="delete" class="bt_danger" type="submit">APAGAR</button>
-                    <button form="save" class="bt_primary" type="submit">SALVAR</button>
+            <form action="/chefs/edit?_method=PUT" method="POST">
+                <div class="title">
+                    <h2>Editando chef</h2>
+                    
+                    <div class="btNav">
+                        <button form="delete" class="bt_danger" type="submit">APAGAR</button>
+                        <button class="bt_primary" type="submit">SALVAR</button>
+                    </div>
                 </div>
-            </div>
 
-            {% include "./fields.njk" %}
+                {% include "./fields.njk" %}
 
-            <input type="hidden" name="id" value="{{ chef.id }}">
-        </form>
+                <input type="hidden" name="id" value="{{ chef.id }}">
+            </form>
 
-        <form id="delete" action="/chefs/edit?_method=DELETE" method="POST" enctype="multipart/form-data">
+        <form id="delete" action="/chefs/edit?_method=DELETE" method="POST">
             <input type="hidden" name="id" value="{{ chef.id }}">
         </form>
 

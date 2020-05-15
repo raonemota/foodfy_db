@@ -78,6 +78,8 @@ module.exports = {
     },
     async put(req, res){
 
+        console.log(req.body)
+
         const keys = Object.keys(req.body)
 
         //Verifica se todos os campos estao preenchidos

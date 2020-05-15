@@ -11,16 +11,12 @@ body {
     font-family: 'Lato', sans-serif;
 }
 
-
 .general-contents {
     width: 100%;
-    margin: 0 auto;
-    
+    margin: 0 auto;  
 }
 
 header {
-    /* max-width: 940px; */
-    /* margin: 0 auto; */
     padding: 30px;
     background-color: #111111;
     box-sizing: border-box;
@@ -43,8 +39,6 @@ header {
 
 .nav .links ul li a{
     color: #777777;
-
-
     text-decoration: none;
 }
 
@@ -246,7 +240,7 @@ select {
     font-size: 14px;
     line-height: 24px;
     color: #777777;
-    font-weight: normal;
+    font-weight: 300;
 }
 
 .card .card__txt a{
@@ -322,6 +316,7 @@ select {
 
 .itemDescription{
     margin-top: 31px;
+    line-height: 1.8;
 }
 
 .boxInfo div:nth-child(1){
