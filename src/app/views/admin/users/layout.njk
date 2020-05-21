@@ -2,28 +2,29 @@
     <head>
 
         {% block head %}
-            <title>Foodify - </title>
+            <title>Foodify - Úsuarios</title>
         {% endblock %}
         
         <meta name="description" content="Site onde você encontra as melhores receitas" >
-        <link href="/css/styleAdm.css" rel="stylesheet">
+        <link href="/css/users.css" rel="stylesheet">
         <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
+        
     </head>
     <body>
         <section class="general-contents">
             
             {% include "./parts/header.njk" %}
 
-            {% include "./parts/messages.njk" %}
-            
-            {% block content %}
-            
-            {% endblock %}      
-        </section>
+            {% include "../parts/messages.njk" %}
+
+            {% block content %}{% endblock %}
         
-        {% include "./parts/footer.njk" %}
+        </section>
+
+        <div class="footer">
+            <div class="footer__txt">Todos os direitos reservados pelo Foodfy</div>
+        </div>
 
     </body>
-        
+
 </html>

@@ -1,0 +1,32 @@
+<div class="item">
+    <div>Email</div>
+    <div>
+        <input type="text" name="email" value="{{ user.email }}">
+    </div>
+</div>
+
+<div class="item">
+    <div>Nova senha</div>
+    <div>
+        <input type="password" name="password">
+    </div>
+</div>
+
+<div class="item">
+    <div>Repetir senha</div>
+    <div>
+        <input type="password" name="passwordRepeat">
+    </div>
+</div>
+
+<div id="buttonsForm" class="item">
+    <div>
+        
+    </div>
+    <div id="buttonForm">
+        <button class="bt_primary" type="submit">Nova senha</button>
+    </div>
+</div>
+
+<input type="hidden" name="token" value="{{ token }}">
+

@@ -1,0 +1,55 @@
+{% extends "../layoutAdmin.njk" %}
+
+{% block head %}
+    <title>Foodify - Manager</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <div class="title">
+            <h2>Usuários</h2>
+            {% if userVerify.is_admin == 1 %}
+            <div class="btNav">
+                <a href="/users/register"> <button class="bt_primary" type="button">Novo</button> </a>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if users == '' %}
+            <div><span>Não foram encontrados usuários cadastrados no sistema.</span></div>
+        {% endif %}
+
+        <div class="cardsUser">
+
+            {% for userItem in users %}
+                <div class="cardUser">
+                    <h2>{{ userItem.name }} {% if userItem.is_admin %}<span class="material-icons">check_circle</span>{% endif %}</h2>
+                    <h4>{{ userItem.email }}</h4>
+                    
+                    <div class="buttonsUser">
+                        <a href="/users/edit/{{userItem.id}}">Editar</a>
+                        <form id="form-delete" action="/users/list?_method=DELETE" method="POST">
+                            <input type="hidden" name="id" value="{{userItem.id}}">
+                            {% if userItem.is_admin == 1 %}<button type="submit">Remover</button>{% endif %}
+                        </form>
+                    </div>
+                </div> 
+            {% endfor %}
+            
+        </div> 
+
+    </div>
+
+{% endblock %}
+
+<script>
+    const formDelete = document.querySelector("#form-delete")
+    formDelete.addEventListener("submit", function(event){
+        const confirmation = confirm("Tem certeza que deseja deletar?")
+        if(!confirmation){
+            event.preventDefault()
+        }
+    })
+</script>

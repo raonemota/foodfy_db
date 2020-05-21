@@ -12,9 +12,11 @@
             <div>
                 <h2>Receita: {{ recipe.title }}</h2>
             </div>
+            {% if recipe.id_user == user.id %}
             <div class="btNav">
                 <a href="/admin/{{ recipe.id }}/edit"><button class="bt_primary" type="submit">Editar receita</button></a>
-            </div>
+            </div>   
+            {% endif %}
         </div>
 
         <div class="banner__img">

@@ -31,6 +31,7 @@ header {
   display: grid;
   -ms-grid-columns: 100px 1fr 1fr 100px;
       grid-template-columns: 100px 1fr 1fr 100px;
+  position: relative;
 }
 
 .nav a {
@@ -293,7 +294,7 @@ header {
 }
 
 #btManager {
-  padding: 4px 6px;
+  padding: 5px 6px;
   background-color: #6558C3;
   color: white;
   position: absolute;
@@ -359,7 +360,7 @@ header {
 }
 
 .cardChef .chef__txt .link {
-  margin-top: 10px;
+  margin-top: 3px;
 }
 
 /* === FOOTER === */

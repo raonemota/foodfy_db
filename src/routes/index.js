@@ -3,11 +3,15 @@ const routes = express.Router()
 
 const homeController = require('../app/controllers/homeController')
 
+const { redirectToLogin } = require('../app/middlewares/session')
+
 const admin = require('./admin')
 const chefs = require('./chefs')
+const users = require('./users')
 
 routes.use('/admin', admin)
 routes.use('/chefs', chefs)
+routes.use('/users', users)
 
 /* -- Home -- */
 routes.get('/', homeController.index)

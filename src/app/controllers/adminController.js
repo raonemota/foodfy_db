@@ -4,6 +4,7 @@ const { date } = require('../../lib/utils')
 const Recipe = require('../models/Recipes')
 const File = require('../models/File')
 const Chefs = require('../models/Chefs')
+const User = require('../models/Users')
 
 module.exports = {
     async list(req, res){
@@ -16,19 +17,29 @@ module.exports = {
         async function getImage(recipeId){
             let results = await Recipe.files(recipeId)
             const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
-            
             return files[0]
+        }
+
+        async function getChefName(recipeId){
+            let results = await Chefs.findChef(recipeId)
+            const chef = results.rows[0].name
+            return chef
         }
 
         const recipesPromise = recipes.map(async recipe => {
             recipe.img = await getImage(recipe.id)
+            recipe.chef = await getChefName(recipe.id_chef)
             recipe.created_at = date(recipe.created_at).iso
             return recipe
         })
 
-        const allRecipes = await Promise.all(recipesPromise)         
+        const allRecipes = await Promise.all(recipesPromise) 
         
-        return res.render('admin/recipes/list', { recipes: allRecipes } )
+        //Pega o usuario
+        results = await User.findOneId(req.session.userId)
+        const user = results.rows[0]
+        
+        return res.render('admin/recipes/list', { recipes: allRecipes, user } )
        
     },
     async create(req, res){
@@ -40,7 +51,7 @@ module.exports = {
     }, 
     async show(req, res){
         const { id } = req.params
-
+        
         //Pega a receita na base de dados
         results = await Recipe.findRecipe(id)
 
@@ -64,7 +75,11 @@ module.exports = {
             src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))
 
-        return res.render("admin/recipes/show", { recipe, ingreds, steps, files } )
+        //Pega o usuario
+        results = await User.findOneId(req.session.userId)
+        const user = results.rows[0]
+
+        return res.render("admin/recipes/show", { recipe, ingreds, steps, files, user } )
 
     },
     async post(req, res){
@@ -73,18 +88,29 @@ module.exports = {
         //Verifica se todos os campos estão preenchido
         for(key of keys){
             if(req.body[key] == ""){
-                return res.send(`Please. fill all fields!`)
+                return res.render('admin/recipes/create', {
+                    error: 'Por favor, complete todos os dados',
+                    recipe: res.body
+                })
             }
         }
 
+        const data = {
+            ...req.body,
+            userId: req.session.userId
+        }
+
         //Cadastra receita principal
-        result = await Recipe.create(req.body)
+        result = await Recipe.create(data)
         const id = result.rows[0].id
 
         // === Cadastra as imagens === //
         // Verifica se foi enviado alguma imagem
         if(req.files.length == 0)
-            return res.send('Please, send at least one image')
+            return res.render('admin/create', {
+                error: 'Por favor, Envie pelo menos uma imagem',
+                recipe: res.body
+            })
 
         //Cria todas as promises para cadastro dos arquivos
         const filesPromise = req.files.map(file => File.create({
@@ -103,9 +129,13 @@ module.exports = {
         const addStepsPromise = steps.map(step => Recipe.createSteps(step, id))
         await Promise.all(addStepsPromise)
 
-        return res.redirect(`list`)
-        
-        
+        let results = await Chefs.all()
+
+        return res.render('admin/recipes/create', {
+            success: 'Receita cadastrada com sucesso!',
+            chefs: results.rows
+        })
+           
     },
     async edit(req, res){
         

@@ -1,0 +1,32 @@
+/* === MESSAGE ALERT === */
+@keyframes hidemessage {
+    to{
+        top: -50px;
+        opacity: 0;
+    }
+}
+
+.message{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 26px;
+    position: absolute;
+    width: 30%;
+    height: 100px;
+    border-radius: 20px;
+    color: white;
+    top: 20;
+    right: 10;
+    opacity: 1;
+
+    animation: hidemessage 400ms 5s ease-out forwards;
+}
+
+.message.error{
+    background-color: tomato;
+}
+
+.message.success{
+    background-color: #06af00;
+}

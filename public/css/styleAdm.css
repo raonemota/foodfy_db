@@ -26,6 +26,7 @@ header {
     width: 940px;
     margin: 0 auto;
     display: flex;
+    position: relative;
 }
 
 .nav .links{
@@ -40,6 +41,30 @@ header {
 .nav .links ul li a{
     color: #777777;
     text-decoration: none;
+}
+
+.nav .logout button{
+    background: none;
+    color: white;
+    font-size: 16px;
+    /* position: absolute; */
+    /* right: 0; */
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.nav .logout {
+    display: grid;
+    grid-template-columns: 1fr 100px;
+    column-gap: 10px;
+    color: white;
+    width: 510px;
+    justify-content: end;
+    justify-items: end;
+    font-size: 18px;
+    align-items: center;
+    position: absolute;
+    right: 0;
 }
 
 /* === CONTENTS === */
@@ -87,7 +112,7 @@ header {
     border-radius: 4px;
     color: white;
     font-size: 14px;
-    padding: 8px 20px;
+    padding: 9px 42px;
     font-weight: bold;
     cursor: pointer;
 }
@@ -97,7 +122,18 @@ header {
     border-radius: 4px;
     color: white;
     font-size: 14px;
-    padding: 8px 20px;
+    padding: 9px 42px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-left: 20px;
+}
+
+.contents .bt_default{
+    background-color: rgb(156, 156, 156);
+    border-radius: 4px;
+    color: white;
+    font-size: 14px;
+    padding: 9px 42px;
     font-weight: bold;
     cursor: pointer;
     margin-left: 20px;
@@ -110,6 +146,8 @@ header {
 }
 
 input[type="text"],
+input[type="email"],
+input[type="password"],
 textarea,
 select {
     padding: 15px;
@@ -119,6 +157,10 @@ select {
     border-radius: 4px;
     margin-top: 10px;
     outline: none;
+}
+
+input.input_error{
+    border: 1.3px solid rgb(241, 8, 8);  
 }
 
 /* ====  IMAGE PREVIEW ==== */
@@ -202,6 +244,11 @@ select {
 
 .item #photos-preview i:hover {
     opacity: 1;
+}
+
+.item span{
+    font-size: 18px;
+    font-weight: bold;
 }
 
 
@@ -413,7 +460,7 @@ select {
 }
 
 .cardChef .chef__txt .link{
-    margin-top: 10px;
+    margin-top: 3px;
 }
 
 /* === AVATAR CHEF === */
@@ -451,5 +498,90 @@ select {
     color: #777777;
 }
 
+/* === FORM USER === */
+
+.contents .formUser {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 43px;
+}
+
+/* === MESSAGE ALERT === */
+@keyframes hidemessage {
+    to{
+        top: -50px;
+        opacity: 0;
+    }
+}
+
+.message{
+    display: flex;
+    justify-content: center;
+    padding: 16px;
+    position: absolute;
+    width: 100%;
+    color: white;
+    top: 0;
+    opacity: 1;
+
+    animation: hidemessage 400ms 5s ease-out forwards;
+}
+
+.message.error{
+    background-color: tomato;
+}
+
+.message.success{
+    background-color: #06af00;
+}
+
+
+/* === CARDS USER === */
+.cardsUser{
+    margin-top: 47px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 40px;
+}
+
+.cardUser h2{
+    font-size: 20px;
+    color: #111111;
+    padding: 4px 0;
+}
+
+.cardUser h4{
+    font-size: 16px;
+    font-weight: normal;
+    color: #777;
+}
+
+.cardUser span{
+    font-size: 20px;
+    color: #2421a9;
+}
+
+.buttonsUser{
+    display: flex;
+    grid-template-columns: 200px 1fr;
+    align-items: center; 
+    margin-top: 16px;  
+}
+
+.buttonsUser a{
+    margin-right: 16px;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    color: #6558C3;
+}
+
+.buttonsUser button{
+    font-size: 16px;
+    font-weight: bold;
+    color: #F55A5A;
+    background: none;
+    cursor: pointer;
+}
 
 

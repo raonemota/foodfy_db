@@ -1,7 +1,7 @@
 {% extends "../layoutAdmin.njk" %}
 
 {% block head %}
-    <title>Foodify - Lista</title>
+    <title>Foodify - Lista de Receitas</title>
 {% endblock %}
 
 {% block content %}
@@ -31,6 +31,7 @@
                     <div class="card__txt">
                         <h2>{{ recipe.title }}</h2>
                         <h3>Cadastrada: {{ recipe.created_at }}</h3>
+                        <h3>Por: {{ recipe.chef }}</h3>
                         <a href="/admin/show/{{ recipe.id }}">Visualizar</a>    
                     </div>
 

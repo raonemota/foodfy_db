@@ -10,16 +10,18 @@
                 
         <div class="title">
             <h2>Gerenciar chefs</h2>
+            {% if user.is_admin == 1 %}
             <div class="btNav">
                 <div><a href="/chefs/create"><button class="bt_primary">Adicionar chef</button></a></div>
             </div>
+            {% endif %}
         </div>
-
-        <div class="cardsChefs">
 
         {% if chefs == '' %}
             <div><span>Não foram encontrado chefes cadastrados no sistema.</span></div>
         {% endif %}
+
+        <div class="cardsChefs">
 
         {% for chef in chefs %}
             <div class="cardChef">

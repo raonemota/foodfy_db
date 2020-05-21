@@ -12,9 +12,11 @@
             <div>
                 <h2>Chef: {{ chef.name }}</h2>
             </div>
+            {% if user.is_admin == 1 %}
             <div class="btNav">
                 <a href="/chefs/{{ chef.id }}/edit"><button class="bt_primary" type="submit">Editar Chef</button></a>
             </div>
+            {% endif %}
         </div>
 
         <div class="contentAvatar">

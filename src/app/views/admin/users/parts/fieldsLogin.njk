@@ -1,0 +1,23 @@
+<div class="item">
+    <div>Email</div>
+    <div>
+        <input type="email" name="email" value="{{ user.email }}" {% if (err == 'allErr') or (err == 'email')  %}class='error'{% endif %}>
+    </div>
+</div>
+
+<div class="item">
+    <div>Password</div>
+    <div>
+        <input type="password" name="password" {% if err == 'pass'  %}class="error"{% endif %}>
+    </div>
+</div>
+
+<div id="buttonsForm" class="item">
+    <div>
+        <a href="/users/forgot-password">Perdeu a senha?</a>
+    </div>
+    <div id="buttonForm">
+        <button class="bt_primary" type="submit">Acessar</button>
+    </div>
+</div>
+

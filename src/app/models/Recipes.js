@@ -20,7 +20,7 @@ module.exports = {
             data.aditional_info,
             date(Date.now()).format,
             data.chef,
-            1
+            data.userId
             
         ]
 

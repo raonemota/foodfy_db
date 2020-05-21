@@ -1,11 +1,24 @@
-<div class="nav">
-    <div class="logo">
-        <a href="/"><img src="/imgs/logo_white.png" alt="Logo Foodify"></a>
+<header> 
+    <div class="nav">
+        <div class="logo">
+            <a href="/"><img src="/imgs/logo_white.png" alt="Logo Foodify"></a>
+        </div>
+        <div class="links">
+            <ul>
+                <li><a href="/admin/list">RECEITAS</a></li>
+                <li><a href="/chefs/list">CHEFS</a></li>
+                <li><a href="/users/list">USUÁRIOS</a></li>
+            </ul>   
+        </div>
+
+        <div class="logout">
+            <div class="welcome">Olá, {{user.name}}</div>
+            <div>
+                <form action="/users/logout" method="POST">
+                    <button type="submit">SAIR</button>
+                </form>
+            </div>
+        </div>
+
     </div>
-    <div class="links">
-        <ul>
-            <li><a href="/admin/list">Receitas</a></li>
-            <li><a href="/chefs/list">Chefs</a></li>
-        </ul>
-    </div>
-</div>
+</header>

@@ -38,5 +38,5 @@ module.exports = {
     },
     delete(id){
         return db.query('DELETE FROM chefs WHERE id = $1', [id])
-    }
+    },
 }

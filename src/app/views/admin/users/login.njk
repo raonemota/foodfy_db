@@ -1,0 +1,22 @@
+{% extends "./layout.njk" %}
+
+{% block head %}
+    <title>Foodify - Manager</title>
+{% endblock %}
+
+{% block content %}
+
+    <div class="contents">
+
+        <form id="formRegister" method="POST" action="/users/login">
+            <div class="title">
+                <h2>Iniciar sessão</h2>
+            </div>
+
+            {% include "./parts/fieldsLogin.njk" %}
+
+        </form>
+
+    </div>
+
+{% endblock %}

@@ -1,16 +1,22 @@
 const fs = require('fs')
 const Chefs = require('../models/Chefs')
 const Recipe = require('../models/Recipes')
+const User = require('../models/Users')
 
 const { date } = require('../../lib/utils')
 
 module.exports = {
 
     async list(req, res){
-        let results = await Chefs.all()
-        const chefs = results.rows      
         
-        return res.render("admin/chefs/list", { chefs } )
+        let results = await Chefs.all()
+        const chefs = results.rows
+        
+        //Pega o usuario
+        results = await User.findOneId(req.session.userId)
+        const user = results.rows[0]
+        
+        return res.render("admin/chefs/list", { chefs, user } )
     },
     async listChefsHome(req, res){
         let results = await Chefs.all()
@@ -58,11 +64,14 @@ module.exports = {
             return recipe
         })
 
-        const recipes = await Promise.all(recipesPromise) 
-        
+        const recipes = await Promise.all(recipesPromise)                
         const totalRecipes = results.rowCount
 
-        return res.render("admin/chefs/show", { chef, recipes, totalRecipes } )
+        //Pega o usuario
+        results = await User.findOneId(req.session.userId)
+        const user = results.rows[0]
+
+        return res.render("admin/chefs/show", { chef, recipes, totalRecipes, user } )
 
     },
     async edit(req, res){
@@ -77,8 +86,6 @@ module.exports = {
         
     },
     async put(req, res){
-
-        console.log(req.body)
 
         const keys = Object.keys(req.body)
 
