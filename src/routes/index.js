@@ -5,11 +5,11 @@ const homeController = require('../app/controllers/homeController')
 
 const { redirectToLogin } = require('../app/middlewares/session')
 
-const admin = require('./admin')
+const recipes = require('./recipes')
 const chefs = require('./chefs')
 const users = require('./users')
 
-routes.use('/admin', admin)
+routes.use('/recipes', recipes)
 routes.use('/chefs', chefs)
 routes.use('/users', users)
 

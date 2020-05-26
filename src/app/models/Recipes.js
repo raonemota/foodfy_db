@@ -3,7 +3,11 @@ const { date } = require('../../lib/utils')
 
 module.exports = {
     all(){
-       return db.query(`SELECT * FROM recipes`)
+       return db.query(`SELECT R.*, C.name as chef, U.name as user FROM recipes as R
+                            INNER JOIN chefs AS C
+                            ON C.id = R.id_chef
+                            INNER JOIN users AS U
+                            ON U.id = R.id_user`)
     },
     create(data){
         //Monta Query principal para inserção de dados
@@ -42,9 +46,11 @@ module.exports = {
 
     },
     findRecipe(id){
-        return db.query(`SELECT R.*, C.name as chef FROM recipes AS R
+        return db.query(`SELECT R.*, C.name as chef, U.name as user FROM recipes AS R
                             INNER JOIN chefs AS C
                             ON C.id = R.id_chef
+                            INNER JOIN users AS U
+                            ON U.id = R.id_user
                             where R.id = $1`, [id] )
     },
     findIngred(id){

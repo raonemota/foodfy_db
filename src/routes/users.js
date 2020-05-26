@@ -24,7 +24,7 @@ routes.post('/register', sessionValidator.newRegisterUser, userController.post)
 routes.get('/edit', userController.editForm)
 routes.get('/edit/:id', userController.editUser)
 routes.put('/edit', sessionValidator.updateUser, userController.updateFormNewUser)
-routes.delete('/list', userController.deleteUser)
+routes.delete('/list', userController.delete)
 
 
 

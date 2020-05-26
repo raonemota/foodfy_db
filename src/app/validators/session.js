@@ -17,7 +17,7 @@ async function newRegisterUser(req, res, next){
     }
     
     //Verifica se já existe usuário cadastrado
-    results = await User.findOne(email)
+    results = await User.findOne({where: {email}})
     const userFind = results.rowCount
 
     if(userFind > 0){
@@ -49,7 +49,8 @@ async function updateUser(req, res, next){
     
     //Verifica se a senha esta correta.
     if (user.status == '1') {
-        results = await User.findOneId(user.id)
+        const id = user.id
+        results = await User.findOne({ where: {id}})
         const userData = results.rows[0]
         const passed = await compare(user.password, userData.password)
         
@@ -66,8 +67,9 @@ async function updateUser(req, res, next){
 }
 
 async function loginUser(req, res, next){
-    
-    const user = req.body
+
+    const { email, password } = req.body
+
     const keys = Object.keys(req.body)
 
     //Verifica se todos os campos estão preenchido
@@ -82,31 +84,28 @@ async function loginUser(req, res, next){
     }
     
     //Verifica se o email está cadastrado
-    results = await User.findOne(user.email)
-    const emailUser = results.rows[0]
+    results = await User.findOne({where: {email}})
+    const user = results.rows[0]
 
-    if(!emailUser){
+    if(!user){
         return res.render('admin/users/login', {
             error: 'O email digitado não está cadastrado.',
-            user,
+            user: req.body,
             err: 'email'
         })
-    }else{
+    }else{      
 
-        //Verifica se a senha esta correta.
-        results = await User.findOneId(emailUser.id)
-        const userData = results.rows[0]
-        const passed = await compare(user.password, userData.password)
+        const passed = await compare(password, user.password)
         
         if(!passed){
             return res.render('admin/users/login', {
                 error: 'A senha digitada não está correta. Favor tentar novamente.',
-                user: userData,
+                user: req.body,
                 err: 'pass'
             })
         } 
 
-        req.user = userData     
+        req.user = user
 
         next()
 
@@ -117,8 +116,6 @@ async function loginUser(req, res, next){
 async function forgot(req, res, next){
 
     const { email, password, passwordRepeat, token } = req.body
-
-    
     
     const keys = Object.keys(req.body)
     
@@ -135,7 +132,7 @@ async function forgot(req, res, next){
         }
     }
     
-    results = await User.findUser(email)
+    results = await User.findOne({ where: { email }})
     const user = results.rows[0]
 
     //Verifica se o email está cadastrado

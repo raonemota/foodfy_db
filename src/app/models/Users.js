@@ -5,17 +5,20 @@ module.exports = {
     all(){
         return db.query('SELECT * FROM users')
     },
-    findUser(email){
-        return db.query('SELECT * FROM users WHERE email = $1', [email])
-    },
-    findOne(email){
-        return db.query('SELECT id, email FROM users WHERE email = $1', [email])
-    },
-    findOneId(id){
-        return db.query('SELECT id, name, email, password, status, is_admin FROM users WHERE id = $1', [id])
-    },
-    findByToken(token){
-        return db.query('SELECT * FROM users WHERE password = $1', [token])
+    findOne(filters){
+
+        let query = "SELECT * FROM users"
+
+        Object.keys(filters).map(key => {
+            //WHERE | OR | AND
+            query = `${query} ${key}`            
+
+            Object.keys(filters[key]).map(field => {
+                query = `${query} ${field} = '${filters[key][field]}'`
+            })
+        })     
+                
+        return db.query(query)
     },
     registerUser(data){
 
@@ -69,7 +72,7 @@ module.exports = {
         }   
 
     },
-    deleteUser(id){
+    delete(id){
         return db.query('DELETE FROM users WHERE id = $1', [id])
     },
     updateToken(data){     
@@ -79,7 +82,7 @@ module.exports = {
         const values = [
             data.reset_token,
             data.reset_token_expires,
-            data[0].id
+            data.id
         ]
 
         return db.query(query, values)

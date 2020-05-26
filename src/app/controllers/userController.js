@@ -10,11 +10,14 @@ module.exports = {
         results = await User.all()
         const users = results.rows 
         
-        //Pega o usuario
-        results = await User.findOneId(req.session.userId)
+        const id = req.session.userId
+        results = await User.findOne({ where: {id}})
         const user = results.rows[0]
 
         return res.render("admin/users/list", { users, user })
+    },
+    registerForm(req, res){
+        return res.render("admin/users/register") 
     },
     async post(req, res){
 
@@ -56,33 +59,28 @@ module.exports = {
         }
 
     },
-    registerForm(req, res){
-        return res.render("admin/users/register") 
-    },
     async editForm(req, res){
 
         try {
             
-            const token = req.query.token
+            const password = req.query.token
             
-            if(!token){ 
+            if(!password){ 
                 return res.redirect("/")
             }
-
-            results = await User.findByToken(token)
-            const user = results.rows[0]
+            
+            results = await User.findOne({where: {password}})
+            const user = results.rows[0]         
 
             if(results.rowCount > 0){
-                return res.render("admin/users/edit", { user, token }) 
+                return res.render("admin/users/edit", { user, token: password }) 
             }else{
                 return res.redirect("/")
-                
             }
             
         } catch (error) {
             return res.render("admin/users/register", {
-                error: `Ocorreu um erro [atualizacao com token]: ${err}`,
-                user: data
+                error: `Ocorreu um erro [atualizacao com token]: ${error}`
             }) 
         }
         
@@ -94,7 +92,7 @@ module.exports = {
             
             const { id } = req.params
             
-            results = await User.findOneId(id)
+            results = await User.findOne({where: {id}})
             const user = results.rows[0]            
 
             if(!user)
@@ -133,12 +131,12 @@ module.exports = {
         
         
     },
-    async deleteUser(req, res){
+    async delete(req, res){
        
         const { id } = req.body
 
         try {
-            await User.deleteUser(id)
+            await User.delete(id)
 
             results = await User.all()
             const users = results.rows
@@ -155,25 +153,22 @@ module.exports = {
         }
         
     },
-    async loginForm(req, res){
+    async loginForm(req, res){  
 
         if (req.session.userId) {         
-            return res.redirect('/admin/list' )
+            return res.redirect('/recipes/list' )
 
         }else{            
             return res.render("admin/users/login")
         }
     },
-    async postLogin(req, res){
+    async postLogin(req, res){ 
         req.session.userId = req.user.id        
-        return res.redirect('/admin/list')  
+        return res.redirect('/recipes/list')  
     },
     logout(req, res){
         req.session.destroy()
         return res.redirect("/users/login")
-    },  
-    resetForm(req, res){       
-        return res.render("admin/users/password-reset", { token: req.query.token})
     },
     forgotForm(req, res){
         return res.render("admin/users/forgot-password")
@@ -184,11 +179,11 @@ module.exports = {
 
             const { email } = req.body
 
-            let results = await User.findOne(email)
-            const user = results.rows
+            let results = await User.findOne({ where: {email} })
+            const user = results.rows[0]
 
             if(!user){
-                return res.render('/admin/users/forgot-password', {
+                return res.render('admin/users/forgot-password', {
                     error: 'Este email não está cadastrado no sistema.',
                     user: req.body,
                     err: 'pass'
@@ -208,7 +203,7 @@ module.exports = {
                 to: email,
                 from: 'no-reply@fodfy.com.br',
                 subject: 'Recuperação de senha',
-                html: `<h2>Olá, ${user[0].name},</h2>
+                html: `<h2>Olá, ${user.name},</h2>
                         <p>Perdeu sua <b>senha</b>?</p>
                         <p>Para recuperar sua senha, basta 
                         <a href="http://localhost:3000/users/password-reset?token=${token}" target="_blank">Clicar aqui</a>`
@@ -219,13 +214,16 @@ module.exports = {
             })
 
             
-        } catch (error) {
+        } catch (error) {         
             return res.render('admin/users/forgot-password', {
                 error: `Ocorreu um erro: ${error}`,
                 user: req.body
             })
             
         }
+    },
+    resetForm(req, res){       
+        return res.render("admin/users/password-reset", { token: req.query.token})
     },
     async reset(req, res){
 
@@ -235,7 +233,7 @@ module.exports = {
 
             let newPassword = await hash(password, 8)
 
-            results = await User.findUser(email)
+            results = await User.findOne( {where: {email} })
             const user = {
                 ...results.rows[0],
                 password: newPassword
@@ -243,7 +241,7 @@ module.exports = {
             
             await User.updatePassword(user)
 
-            return res.redirect('users/login')
+            return res.redirect('/users/login')
             
         } catch (error) {
             return res.render('admin/users/password-reset', {

@@ -20,23 +20,16 @@ module.exports = {
             return files[0]
         }
 
-        async function getChefName(recipeId){
-            let results = await Chefs.findChef(recipeId)
-            const chef = results.rows[0].name
-            return chef
-        }
-
         const recipesPromise = recipes.map(async recipe => {
             recipe.img = await getImage(recipe.id)
-            recipe.chef = await getChefName(recipe.id_chef)
             recipe.created_at = date(recipe.created_at).iso
             return recipe
         })
 
         const allRecipes = await Promise.all(recipesPromise) 
         
-        //Pega o usuario
-        results = await User.findOneId(req.session.userId)
+        const id = req.session.userId
+        results = await User.findOne({where: {id}})
         const user = results.rows[0]
         
         return res.render('admin/recipes/list', { recipes: allRecipes, user } )
@@ -47,13 +40,17 @@ module.exports = {
         let results = await Chefs.all()
         const chefs = results.rows
 
-        return res.render('admin/recipes/create', {chefs})
+        const id = req.session.userId
+        results = await User.findOne({where: {id}})
+        const user = results.rows[0]
+
+        return res.render('admin/recipes/create', {chefs, user})
     }, 
     async show(req, res){
-        const { id } = req.params
+        const RecipeId = req.params.id
         
         //Pega a receita na base de dados
-        results = await Recipe.findRecipe(id)
+        results = await Recipe.findRecipe(RecipeId)
 
         //Formata data
         const recipe = {
@@ -75,8 +72,8 @@ module.exports = {
             src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))
 
-        //Pega o usuario
-        results = await User.findOneId(req.session.userId)
+        const id = req.session.userId
+        results = await User.findOne({where: {id}})
         const user = results.rows[0]
 
         return res.render("admin/recipes/show", { recipe, ingreds, steps, files, user } )
@@ -220,7 +217,7 @@ module.exports = {
         }))
         await Promise.all(filesPromise)
 
-        return res.redirect(`/admin/show/${req.body.id}`)
+        return res.redirect(`/recipes/show/${req.body.id}`)
         
     },
     async delete(req, res){
@@ -235,7 +232,7 @@ module.exports = {
         //Remove da base de dados
         await Recipe.deleteRecipe(id)
 
-        return res.redirect(`/admin/list`)
+        return res.redirect(`/recipes/list`)
     }
 
 }

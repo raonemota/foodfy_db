@@ -7,7 +7,7 @@
 {% block content %}
 
     <div class="contents">
-        <form id="save" action="/admin/edit?_method=PUT" method="POST" enctype="multipart/form-data">
+        <form id="save" action="/recipes/edit?_method=PUT" method="POST" enctype="multipart/form-data">
             <div class="title">
                 <h2>Editando receita</h2>
                 
@@ -22,7 +22,7 @@
             <input type="hidden" name="id" value="{{ recipe.id }}">
         </form>
 
-        <form id="delete" action="/admin/edit?_method=DELETE" method="POST">
+        <form id="delete" action="/recipes/edit?_method=DELETE" method="POST">
             <input type="hidden" name="id" value="{{ recipe.id }}">
         </form>
 

@@ -11,7 +11,7 @@
         <div class="title">
             <h2>Gerenciar receitas</h2>
             <div class="btNav">
-                <div><a href="/admin/create"><button class="bt_primary">Adicionar receita</button></a></div>
+                <div><a href="/recipes/create"><button class="bt_primary">Adicionar receita</button></a></div>
             </div>
         </div>
 
@@ -30,9 +30,9 @@
 
                     <div class="card__txt">
                         <h2>{{ recipe.title }}</h2>
-                        <h3>Cadastrada: {{ recipe.created_at }}</h3>
-                        <h3>Por: {{ recipe.chef }}</h3>
-                        <a href="/admin/show/{{ recipe.id }}">Visualizar</a>    
+                        <h3>Chef: {{ recipe.chef }}</h3>
+                        <h3>Criado por: {{ recipe.user }}</h3>
+                        <a href="/recipes/show/{{ recipe.id }}">Visualizar</a>    
                     </div>
 
                 </div>

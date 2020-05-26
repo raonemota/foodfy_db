@@ -12,8 +12,8 @@ module.exports = {
         let results = await Chefs.all()
         const chefs = results.rows
         
-        //Pega o usuario
-        results = await User.findOneId(req.session.userId)
+        const id = req.session.userId
+        results = await User.findOne({where: {id}})
         const user = results.rows[0]
         
         return res.render("admin/chefs/list", { chefs, user } )
@@ -44,13 +44,13 @@ module.exports = {
         return res.redirect("/chefs/list")
     }, 
     async show(req, res){
-        const { id } = req.params
+        const chefId = req.params.id
 
         //Pega a receita na base de dados
-        results = await Chefs.findChef(id)
-        const chef = results.rows[0]
+        results = await Chefs.findChef(chefId)
+        const chef = results.rows[0]        
         
-        results = await Recipe.findRecipesPerChef(id)
+        results = await Recipe.findRecipesPerChef(chefId)
 
         async function getImage(recipeId){
             let results = await Recipe.files(recipeId)
@@ -67,8 +67,8 @@ module.exports = {
         const recipes = await Promise.all(recipesPromise)                
         const totalRecipes = results.rowCount
 
-        //Pega o usuario
-        results = await User.findOneId(req.session.userId)
+        const id = req.session.userId
+        results = await User.findOne({where: {id}})
         const user = results.rows[0]
 
         return res.render("admin/chefs/show", { chef, recipes, totalRecipes, user } )
