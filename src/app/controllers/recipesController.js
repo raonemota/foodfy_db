@@ -29,8 +29,7 @@ module.exports = {
         const allRecipes = await Promise.all(recipesPromise) 
         
         const id = req.session.userId
-        results = await User.findOne({where: {id}})
-        const user = results.rows[0]
+        const user = await User.findOne({where: {id}})
         
         return res.render('admin/recipes/list', { recipes: allRecipes, user } )
        
@@ -41,8 +40,7 @@ module.exports = {
         const chefs = results.rows
 
         const id = req.session.userId
-        results = await User.findOne({where: {id}})
-        const user = results.rows[0]
+        const users = await User.findOne({where: {id}})
 
         return res.render('admin/recipes/create', {chefs, user})
     }, 
@@ -73,10 +71,11 @@ module.exports = {
         }))
 
         const id = req.session.userId
-        results = await User.findOne({where: {id}})
-        const user = results.rows[0]
+        const user = await User.findOne({where: {id}})
 
-        return res.render("admin/recipes/show", { recipe, ingreds, steps, files, user } )
+        success = (req.query.msgSuccess) ? 'Ação foi executada com sucesso!' : ''
+
+        return res.render("admin/recipes/show", { recipe, ingreds, steps, files, user, success } )
 
     },
     async post(req, res){
@@ -136,26 +135,19 @@ module.exports = {
     },
     async edit(req, res){
         
-        const { id } = req.params
+        results = await Recipe.findRecipe(req.params.id)
 
-        //Pega a receita na base de dados
-        results = await Recipe.findRecipe(id)
-
-        //Formata data
         const recipe = {
             ...results.rows[0],
             created_at: date(results.rows[0].created_at).iso
         }      
 
-        //Pega os ingredientes com base no ID da receita
         results = await Recipe.findIngred(recipe.id)
         const ingreds = results.rows
 
-        //Pega as etapas para preparação com base no ID da receita
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 
-        //Pega as imagem cadatradadas na receita
         results = await Recipe.files(recipe.id)
         const files = results.rows.map(file => ({
             ...file,
@@ -165,7 +157,12 @@ module.exports = {
         results = await Chefs.all()
         const chefs = results.rows
 
-        return res.render('admin/recipes/edit', { recipe, ingreds, steps, files, chefs })
+        const id = req.session.userId
+        const user = await User.findOne({where: {id}})
+
+        error = (req.query.msgError) ? 'Todos os campos devem ser preenchidos.' : ''
+
+        return res.render('admin/recipes/edit', { recipe, ingreds, steps, files, chefs, user, error })
         
     },
     async put(req, res){
@@ -176,7 +173,7 @@ module.exports = {
         for(key of keys){
             
             if(key != 'removed_files' && req.body[key] == ""){
-                return res.send(`Please. fill all fields!`)
+                return res.redirect(`/recipes/${req.body.id}/edit?msgError=1`)
             }
         }
 
@@ -217,7 +214,7 @@ module.exports = {
         }))
         await Promise.all(filesPromise)
 
-        return res.redirect(`/recipes/show/${req.body.id}`)
+        return res.redirect(`/recipes/show/${req.body.id}?msgSuccess=1`)
         
     },
     async delete(req, res){

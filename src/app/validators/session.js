@@ -17,10 +17,9 @@ async function newRegisterUser(req, res, next){
     }
     
     //Verifica se já existe usuário cadastrado
-    results = await User.findOne({where: {email}})
-    const userFind = results.rowCount
+    const userFind = await User.findOne({where: {email}})
 
-    if(userFind > 0){
+    if(userFind){
         return res.render('admin/users/register', {
             error: 'Este usuário já existe.'
         })
@@ -50,8 +49,8 @@ async function updateUser(req, res, next){
     //Verifica se a senha esta correta.
     if (user.status == '1') {
         const id = user.id
-        results = await User.findOne({ where: {id}})
-        const userData = results.rows[0]
+        const userData = await User.findOne({ where: {id}})
+
         const passed = await compare(user.password, userData.password)
         
         if(!passed){
@@ -84,8 +83,7 @@ async function loginUser(req, res, next){
     }
     
     //Verifica se o email está cadastrado
-    results = await User.findOne({where: {email}})
-    const user = results.rows[0]
+    const user  = await User.findOne({where: {email}})
 
     if(!user){
         return res.render('admin/users/login', {
@@ -132,8 +130,7 @@ async function forgot(req, res, next){
         }
     }
     
-    results = await User.findOne({ where: { email }})
-    const user = results.rows[0]
+    const user = await User.findOne({ where: { email }})
 
     //Verifica se o email está cadastrado
     if(!user) return res.render('admin/users/password-reset', {

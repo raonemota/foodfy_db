@@ -2,22 +2,26 @@ const User = require('../models/Users')
 const crypto = require('crypto') 
 const mailer = require('../../lib/mailer')
 
-const { hash } = require('bcryptjs')
 
 module.exports = {
     async list(req, res){
 
-        results = await User.all()
-        const users = results.rows 
-        
-        const id = req.session.userId
-        results = await User.findOne({ where: {id}})
-        const user = results.rows[0]
+        const users = await User.findAll()
 
-        return res.render("admin/users/list", { users, user })
+        const id = req.session.userId
+        const user = await User.findOne({ where: {id}})
+
+        success = (req.query.msgSuccess) ? 'Ação executada com sucesso!' : ''
+        error = (req.query.msgError) ? 'Ocorreu algum erro.' : ''
+
+        return res.render("admin/users/list", { users, user, success, error })
     },
-    registerForm(req, res){
-        return res.render("admin/users/register") 
+    async register(req, res){
+
+        const id = req.session.userId
+        const user = await User.findOne({where: {id}})
+
+        return res.render("admin/users/register", { user }) 
     },
     async post(req, res){
 
@@ -31,7 +35,7 @@ module.exports = {
         }   
         
         try {
-            results = await User.registerUser(data)
+            results = await User.create(data)
 
             await mailer.sendMail({
                 to: email,
@@ -42,11 +46,10 @@ module.exports = {
                         <p>É necessário que você cadastre uma nova senha, basta acessar o site: <a href="http://localhost:3000/users/edit?token=${token}" target="_blank">Criar senha</a>`
             })
 
-            results = await User.all()
-            const users = results.rows
+            const users = await User.all()
 
-            return res.render("admin/users/list", {
-                success: 'Usuário foi cadastrado com sucesso',
+            return res.render("admin/users/register", {
+                success: 'Usuário foi cadastrado com sucesso. Email enviado com solicitação de nova senha.',
                 users
             })
 
@@ -59,7 +62,7 @@ module.exports = {
         }
 
     },
-    async editForm(req, res){
+    async editFirstTIme(req, res){
 
         try {
             
@@ -69,8 +72,7 @@ module.exports = {
                 return res.redirect("/")
             }
             
-            results = await User.findOne({where: {password}})
-            const user = results.rows[0]         
+            const user = await User.findOne({where: {password}})      
 
             if(results.rowCount > 0){
                 return res.render("admin/users/edit", { user, token: password }) 
@@ -86,19 +88,19 @@ module.exports = {
         
         
     },
-    async editUser(req, res){
+    async edit(req, res){
 
         try {
             
             const { id } = req.params
-            
-            results = await User.findOne({where: {id}})
-            const user = results.rows[0]            
+            const user = await User.findOne({where: {id}})           
 
             if(!user)
-                return res.redirect("admin/users/list")
+                return res.redirect("/users/list?msgError=1")
 
-            return res.render("admin/users/edit", { user })
+            error = (req.query.msgError) ? 'Todos os campos devem ser preenchidos.' : ''
+
+            return res.render("admin/users/edit", { user, error })
             
         } catch (err) {
             return res.render("admin/users/list", {
@@ -109,17 +111,16 @@ module.exports = {
         
         
     },
-    async updateFormNewUser(req, res){
+    async update(req, res){
 
         try {
             
             const data = req.body
-            
-            results = await User.updateUser(data)
+            results = await User.update(data)
            
             req.session.userId = results.rows[0].id
 
-            return res.redirect("/users/list") 
+            return res.redirect("/users/list?msgSuccess=1") 
             
         } catch (error) {
            
@@ -127,8 +128,7 @@ module.exports = {
                 error: `Ocorreu um erro no sistema: ${error}`,
                 user: req.body
             }) 
-        }
-        
+        }   
         
     },
     async delete(req, res){
@@ -138,119 +138,16 @@ module.exports = {
         try {
             await User.delete(id)
 
-            results = await User.all()
-            const users = results.rows
+            const users = await User.all()
 
-            return res.render("admin/users/list", {
-                success: 'Usuário foi excluído com sucesso',
-                users
-            }) 
+            return res.redirect("/users/list?msgSuccess=1") 
 
         } catch (err) {
-            return res.render("admin/users/list", {
+            return res.render("/admin/users/list", {
                 error: `Ocorreu um erro no sistema: ${err}`,
             }) 
         }
         
-    },
-    async loginForm(req, res){  
-
-        if (req.session.userId) {         
-            return res.redirect('/recipes/list' )
-
-        }else{            
-            return res.render("admin/users/login")
-        }
-    },
-    async postLogin(req, res){ 
-        req.session.userId = req.user.id        
-        return res.redirect('/recipes/list')  
-    },
-    logout(req, res){
-        req.session.destroy()
-        return res.redirect("/users/login")
-    },
-    forgotForm(req, res){
-        return res.render("admin/users/forgot-password")
-    },
-    async forgot(req, res){
-
-        try {
-
-            const { email } = req.body
-
-            let results = await User.findOne({ where: {email} })
-            const user = results.rows[0]
-
-            if(!user){
-                return res.render('admin/users/forgot-password', {
-                    error: 'Este email não está cadastrado no sistema.',
-                    user: req.body,
-                    err: 'pass'
-                })
-            }
-            
-            const token = crypto.randomBytes(20).toString("hex")
-            let now = new Date()
-            now = now.setHours(now.getHours() + 1)   
-                        
-            user.reset_token = token
-            user.reset_token_expires = now               
-
-            results = await User.updateToken(user)   
-            
-            await mailer.sendMail({
-                to: email,
-                from: 'no-reply@fodfy.com.br',
-                subject: 'Recuperação de senha',
-                html: `<h2>Olá, ${user.name},</h2>
-                        <p>Perdeu sua <b>senha</b>?</p>
-                        <p>Para recuperar sua senha, basta 
-                        <a href="http://localhost:3000/users/password-reset?token=${token}" target="_blank">Clicar aqui</a>`
-            })
-            
-            return res.render('admin/users/forgot-password', {
-                success: 'Email de recuperação enviado com sucesso!'
-            })
-
-            
-        } catch (error) {         
-            return res.render('admin/users/forgot-password', {
-                error: `Ocorreu um erro: ${error}`,
-                user: req.body
-            })
-            
-        }
-    },
-    resetForm(req, res){       
-        return res.render("admin/users/password-reset", { token: req.query.token})
-    },
-    async reset(req, res){
-
-        const { email, password } = req.body        
-
-        try {
-
-            let newPassword = await hash(password, 8)
-
-            results = await User.findOne( {where: {email} })
-            const user = {
-                ...results.rows[0],
-                password: newPassword
-            }         
-            
-            await User.updatePassword(user)
-
-            return res.redirect('/users/login')
-            
-        } catch (error) {
-            return res.render('admin/users/password-reset', {
-                error: `Ocorreu um erro: ${error}`,
-                user: req.body
-            })
-        }
-
-
     }
     
 }

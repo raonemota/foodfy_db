@@ -12,7 +12,7 @@
                 <h2>Editando receita</h2>
                 
                 <div class="btNav">
-                    <button form="delete" class="bt_danger" type="submit">APAGAR</button>
+                    <button form="form-delete" class="bt_danger" type="submit">APAGAR</button>
                     <button form="save" class="bt_primary" type="submit">SALVAR</button>
                 </div>
             </div>
@@ -22,13 +22,24 @@
             <input type="hidden" name="id" value="{{ recipe.id }}">
         </form>
 
-        <form id="delete" action="/recipes/edit?_method=DELETE" method="POST">
+        <form id="form-delete" action="/recipes/edit?_method=DELETE" method="POST">
             <input type="hidden" name="id" value="{{ recipe.id }}">
         </form>
 
     </div>
 
     {% include "./addItem.njk" %}
+
+    
+    <script>
+        const formDelete = document.querySelector("#form-delete")
+        formDelete.addEventListener("submit", function(event){
+            const confirmation = confirm("Tem certeza que deseja deletar?")
+            if(!confirmation){
+                event.preventDefault()
+            }
+        })
+    </script>
 
     <script src="/scripts.js"></script>
     

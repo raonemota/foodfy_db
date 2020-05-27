@@ -13,10 +13,11 @@ module.exports = {
         const chefs = results.rows
         
         const id = req.session.userId
-        results = await User.findOne({where: {id}})
-        const user = results.rows[0]
+        const user = await User.findOne({where: {id}})
+
+        success = (req.query.msgSuccess) ? 'Ação executada com sucesso!' : ''
         
-        return res.render("admin/chefs/list", { chefs, user } )
+        return res.render("admin/chefs/list", { chefs, user, success } )
     },
     async listChefsHome(req, res){
         let results = await Chefs.all()
@@ -24,24 +25,26 @@ module.exports = {
         
         return res.render("home/chefs", { chefs } )
     },
-    create(req, res){
-        return res.render('admin/chefs/create')
+    async create(req, res){
+
+        const id = req.session.userId
+        const user = await User.findOne({where: {id}})
+
+        return res.render('admin/chefs/create', { user })
     },
     async post(req, res){
         const keys = Object.keys(req.body)
 
-        //Verifica se todos os campos estão preenchido
         for(key of keys){
             if(req.body[key] == ""){
-                return res.send(`Please. fill all fields!`)
+                return res.redirect(`/chefs/${req.body.id}/edit?msgError=1`)
             }
         }
 
-        //Cadastra receita principal
         result = await Chefs.create(req.body)
         const id = result.rows[0].id
 
-        return res.redirect("/chefs/list")
+        return res.redirect("/chefs/list?msgSuccess=1")
     }, 
     async show(req, res){
         const chefId = req.params.id
@@ -68,21 +71,24 @@ module.exports = {
         const totalRecipes = results.rowCount
 
         const id = req.session.userId
-        results = await User.findOne({where: {id}})
-        const user = results.rows[0]
+        const user = await User.findOne({where: {id}})
 
-        return res.render("admin/chefs/show", { chef, recipes, totalRecipes, user } )
+        success = (req.query.msgSuccess) ? 'Ação executada com sucesso!' : ''
+
+        return res.render("admin/chefs/show", { chef, recipes, totalRecipes, user, success } )
 
     },
     async edit(req, res){
-        
-        const { id } = req.params
 
-        //Pega a receita na base de dados
-        results = await Chefs.findChef(id)
+        results = await Chefs.findChef(req.params.id)
         const chef = results.rows[0]
 
-        return res.render('admin/chefs/edit', { chef })
+        const id = req.session.userId
+        const user = await User.findOne({where: {id}})
+
+        error = (req.query.msgError) ? 'Todos os campos devem ser preenchidos.' : ''
+
+        return res.render('admin/chefs/edit', { chef, user, error })
         
     },
     async put(req, res){
@@ -92,14 +98,14 @@ module.exports = {
         //Verifica se todos os campos estao preenchidos
         for(key of keys){
             if(req.body[key] == ""){
-                return res.send(`Please. fill all fields!`)
+                return res.redirect(`/chefs/${req.body.id}/edit?msgError=1`)
             }
         }
 
         //Atualiza dados da receita
         results = await Chefs.updateChef(req.body)
 
-        return res.redirect(`/chefs/show/${req.body.id}`)
+        return res.redirect(`/chefs/show/${req.body.id}?msgSuccess=1`)
     },
     async delete(req, res){
 
@@ -118,7 +124,7 @@ module.exports = {
 
         await Chefs.delete(req.body.id)
 
-        return res.redirect(`/chefs/list`)
+        return res.redirect(`/chefs/list?msgSuccess=1`)
 
     }
 

@@ -3,8 +3,6 @@ const routes = express.Router()
 
 const homeController = require('../app/controllers/homeController')
 
-const { redirectToLogin } = require('../app/middlewares/session')
-
 const recipes = require('./recipes')
 const chefs = require('./chefs')
 const users = require('./users')

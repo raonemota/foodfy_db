@@ -1,4 +1,5 @@
 const User = require('../models/Users')
+const Recipe = require('../models/Recipes')
 
 async function redirectToLogin(req, res, next){
 
@@ -14,8 +15,7 @@ async function verifyIfUserCreator(req, res, next){
         return res.redirect('/users/login')       
 
     id = req.session.userId
-    results = await User.findOne({where: {id}})
-    const user = results.rows[0]
+    const user = await User.findOne({where: {id}})
 
     results = await Recipe.findRecipe(req.params.id)
     const recipeUserId = results.rows[0].id_user
@@ -25,7 +25,6 @@ async function verifyIfUserCreator(req, res, next){
     
     next()
 }
-
 
 
 module.exports = {

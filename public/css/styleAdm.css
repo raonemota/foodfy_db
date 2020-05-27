@@ -527,7 +527,7 @@ input.input_error{
     position: absolute;
     width: 100%;
     color: white;
-    top: 0;
+    top: 75;
     opacity: 1;
 
     animation: hidemessage 400ms 5s ease-out forwards;

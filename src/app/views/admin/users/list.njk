@@ -30,9 +30,11 @@
                     
                     <div class="buttonsUser">
                         {% if (user.id == userItem.id) or (user.is_admin == 1) %}<a href="/users/edit/{{userItem.id}}">Editar</a>{% endif %}
-                        <form id="form-delete" action="/users/list?_method=DELETE" method="POST">
+                        <form class="form-delete" action="/users/list?_method=DELETE" method="POST">
+                            {% if (user.is_admin == 1) and (user.id != userItem.id) %}
+                            <button type="submit">Remover</button>
+                            {% endif %}
                             <input type="hidden" name="id" value="{{userItem.id}}">
-                            {% if (user.is_admin == 1) and (user.id != userItem.id) %}<button type="submit">Remover</button>{% endif %}
                         </form>
                     </div>
                 </div> 
@@ -42,14 +44,15 @@
 
     </div>
 
+    <script>
+        const formDelete = document.querySelectorAll('.form-delete')
+        formDelete.forEach(formAlert => formAlert.addEventListener("submit", function(event){
+            const confirmation = confirm("Tem certeza que deseja deletar?")
+            if(!confirmation){
+                event.preventDefault()
+            }
+        }))
+    </script>
+
 {% endblock %}
 
-<script>
-    const formDelete = document.querySelector("#form-delete")
-    formDelete.addEventListener("submit", function(event){
-        const confirmation = confirm("Tem certeza que deseja deletar?")
-        if(!confirmation){
-            event.preventDefault()
-        }
-    })
-</script>
