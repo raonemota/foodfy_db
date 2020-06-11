@@ -1,22 +1,21 @@
-const fs = require('fs')
-const { date } = require('../../lib/utils')
-
 const Recipe = require('../models/Recipes')
 const File = require('../models/File')
 const Chefs = require('../models/Chefs')
 const User = require('../models/Users')
 
+const fs = require('fs')
+const { date } = require('../../lib/utils')
+
 module.exports = {
     async list(req, res){
+                
+        const recipes = await Recipe.allList()
 
-        let results = await Recipe.all()
-        const recipes = results.rows
-        
         if (!recipes) return res.send("Não foram encontrados receitas")
 
         async function getImage(recipeId){
-            let results = await Recipe.files(recipeId)
-            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            let files = await Recipe.files(recipeId)
+            files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
             return files[0]
         }
 
@@ -30,42 +29,93 @@ module.exports = {
         
         const id = req.session.userId
         const user = await User.findOne({where: {id}})
+
+        success = (req.query.msgSuccess) ? 'Ação executada com sucesso!' : ''
         
-        return res.render('admin/recipes/list', { recipes: allRecipes, user } )
+        return res.render('admin/recipes/list', { recipes: allRecipes, user, success } )
        
     },
     async create(req, res){
 
-        let results = await Chefs.all()
-        const chefs = results.rows
+        const chefs = await Chefs.all()
 
         const id = req.session.userId
-        const users = await User.findOne({where: {id}})
+        const user = await User.findOne({where: {id}})
 
         return res.render('admin/recipes/create', {chefs, user})
     }, 
-    async show(req, res){
-        const RecipeId = req.params.id
+    async post(req, res){
         
-        //Pega a receita na base de dados
-        results = await Recipe.findRecipe(RecipeId)
+        //Verifica se todos os campos estão preenchido
+        const keys = Object.keys(req.body)
+        for(key of keys){
+            if(req.body[key] == ""){
+                return res.render('admin/recipes/create', {
+                    error: 'Por favor, complete todos os dados',
+                    recipe: res.body
+                })
+            }
+        }
 
-        //Formata data
-        const recipe = {
-            ...results.rows[0],
-            created_at: date(results.rows[0].created_at).iso
+        // Verifica se foi enviado alguma imagem
+        if(req.files.length == 0)
+            return res.render('admin/create', {
+                error: 'Por favor, Envie pelo menos uma imagem',
+                recipe: res.body
+            })
+
+        
+        const { title, additional_info, chef } = req.body
+
+        result = await Recipe.create({
+                                title,
+                                additional_info,
+                                created_at: date(Date.now()).format,
+                                id_chef: chef,
+                                id_user: req.session.userId
+                            })
+
+        //Cria todas as promises para cadastro dos arquivos
+        const filesPromise = req.files.map(file => File.create({
+            ...file, 
+            id_recipe: result
+        }))
+        await Promise.all(filesPromise)
+
+        //Cadastra todas os ingredientes cadastrados
+        const ingredientes = req.body.ingredients     
+        const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, result))
+        await Promise.all(addIngredPromise)
+        
+        //Cadastra todas os etapas cadastradas
+        const steps = req.body.method_of_preparation     
+        const addStepsPromise = steps.map(step => Recipe.createSteps(step, result))
+        await Promise.all(addStepsPromise)
+
+        return res.redirect('/recipes/list?msgSuccess=1')
+           
+    },
+    async show(req, res){
+        
+        let recipe = await Recipe.findOne({where: {id: req.params.id }})
+        const creatorRecipe = await User.findOne({where: {id: recipe.id_user }})
+        const chefRecipe = await Chefs.findOne({where: {id: recipe.id_chef }})
+
+        recipe = {
+            ...recipe,
+            user: creatorRecipe.name,
+            chef: chefRecipe.name,
+            created_at: date(recipe.created_at).iso
         }  
 
-        //Pega os ingredientes com base no ID da receita
         results = await Recipe.findIngred(recipe.id)
         const ingreds = results.rows
 
-        //Pega as etapas para preparação com base no ID da receita
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 
-        results = await Recipe.files(recipe.id)
-        const files = results.rows.map(file => ({
+        let files = await Recipe.files(recipe.id)
+        files = files.map(file => ({
             ...file,
             src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))
@@ -78,68 +128,13 @@ module.exports = {
         return res.render("admin/recipes/show", { recipe, ingreds, steps, files, user, success } )
 
     },
-    async post(req, res){
-        const keys = Object.keys(req.body)
-
-        //Verifica se todos os campos estão preenchido
-        for(key of keys){
-            if(req.body[key] == ""){
-                return res.render('admin/recipes/create', {
-                    error: 'Por favor, complete todos os dados',
-                    recipe: res.body
-                })
-            }
-        }
-
-        const data = {
-            ...req.body,
-            userId: req.session.userId
-        }
-
-        //Cadastra receita principal
-        result = await Recipe.create(data)
-        const id = result.rows[0].id
-
-        // === Cadastra as imagens === //
-        // Verifica se foi enviado alguma imagem
-        if(req.files.length == 0)
-            return res.render('admin/create', {
-                error: 'Por favor, Envie pelo menos uma imagem',
-                recipe: res.body
-            })
-
-        //Cria todas as promises para cadastro dos arquivos
-        const filesPromise = req.files.map(file => File.create({
-            ...file, 
-            id_recipe: id
-        }))
-        await Promise.all(filesPromise)
-
-        //Cadastra todas os ingredientes cadastrados
-        const ingredientes = req.body.ingredients     
-        const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, id))
-        await Promise.all(addIngredPromise)
-        
-        //Cadastra todas os etapas cadastradas
-        const steps = req.body.method_of_preparation     
-        const addStepsPromise = steps.map(step => Recipe.createSteps(step, id))
-        await Promise.all(addStepsPromise)
-
-        let results = await Chefs.all()
-
-        return res.render('admin/recipes/create', {
-            success: 'Receita cadastrada com sucesso!',
-            chefs: results.rows
-        })
-           
-    },
     async edit(req, res){
         
-        results = await Recipe.findRecipe(req.params.id)
+        let recipe = await Recipe.findOne({where: {id:req.params.id}})
 
-        const recipe = {
-            ...results.rows[0],
-            created_at: date(results.rows[0].created_at).iso
+        recipe = {
+            ...recipe,
+            created_at: date(recipe.created_at).iso
         }      
 
         results = await Recipe.findIngred(recipe.id)
@@ -148,14 +143,13 @@ module.exports = {
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 
-        results = await Recipe.files(recipe.id)
-        const files = results.rows.map(file => ({
+        let files = await Recipe.files(recipe.id)
+        files = files.map(file => ({
             ...file,
             src: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))
 
-        results = await Chefs.all()
-        const chefs = results.rows
+        const chefs = await Chefs.all()
 
         const id = req.session.userId
         const user = await User.findOne({where: {id}})
@@ -167,69 +161,70 @@ module.exports = {
     },
     async put(req, res){
 
-        const keys = Object.keys(req.body)
-
-        //Verifica se todos os campos estao preenchidos
-        for(key of keys){
+        try {
             
-            if(key != 'removed_files' && req.body[key] == ""){
-                return res.redirect(`/recipes/${req.body.id}/edit?msgError=1`)
+            const keys = Object.keys(req.body)
+            for(key of keys){
+                if(key != 'removed_files' && req.body[key] == ""){
+                    return res.redirect(`/recipes/${req.body.id}/edit?msgError=1`)
+                }
             }
+
+            await Recipe.deleteIngreds(req.body.id)
+            await Recipe.deleteSteps(req.body.id)
+            
+            //Cadastra todas os ingredientes cadastrados
+            const ingredientes = req.body.ingredients     
+            const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, req.body.id))
+            await Promise.all(addIngredPromise)
+            
+            //Cadastra todas os etapas cadastradas
+            const steps = req.body.method_of_preparation     
+            const addStepsPromise = steps.map(step => Recipe.createSteps(step, req.body.id))
+            await Promise.all(addStepsPromise)
+
+            await Recipe.update(req.body.id, {
+                title: req.body.title,
+                additional_info: req.body.additional_info, 
+                id_chef: req.body.chef
+            })
+            
+            // === Atualiza imagens da receita
+            if(req.body.removed_files){
+                // Remove vírgula do final da array
+                const removedFiles = req.body.removed_files.split(",")
+                const lastIndex = removedFiles.length - 1
+                removedFiles.splice(lastIndex, 1)
+
+                const removedFilesPromise = removedFiles.map(id => File.delete(id))
+
+                await Promise.all(removedFilesPromise)
+            }
+
+            //Cria todas as promises para cadastro dos arquivos
+            const filesPromise = req.files.map(file => File.create({
+                ...file, 
+                id_recipe: req.body.id
+            }))
+            await Promise.all(filesPromise)
+
+            return res.redirect(`/recipes/show/${req.body.id}?msgSuccess=1`)
+
+        } catch (error) {
+            console.log(error);   
         }
-
-        await Recipe.deleteIngreds(req.body.id)
-        await Recipe.deleteSteps(req.body.id)
-        
-        //Cadastra todas os ingredientes cadastrados
-        const ingredientes = req.body.ingredients     
-        
-        const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, req.body.id))
-        await Promise.all(addIngredPromise)
-        
-        //Cadastra todas os etapas cadastradas
-        const steps = req.body.method_of_preparation     
-        const addStepsPromise = steps.map(step => Recipe.createSteps(step, req.body.id))
-        await Promise.all(addStepsPromise)
-
-        //Atualiza dados da receita
-        await Recipe.updateRecipe(req.body)
-        
-        // === Atualiza imagens da receita
-        // Verifica se tem dados na var removed_files
-        if(req.body.removed_files){
-            // Remove vírgula do final da array
-            const removedFiles = req.body.removed_files.split(",")
-            const lastIndex = removedFiles.length - 1
-            removedFiles.splice(lastIndex, 1)
-
-            const removedFilesPromise = removedFiles.map(id => File.delete(id))
-
-            await Promise.all(removedFilesPromise)
-        }
-
-        //Cria todas as promises para cadastro dos arquivos
-        const filesPromise = req.files.map(file => File.create({
-            ...file, 
-            id_recipe: req.body.id
-        }))
-        await Promise.all(filesPromise)
-
-        return res.redirect(`/recipes/show/${req.body.id}?msgSuccess=1`)
         
     },
     async delete(req, res){
         const { id } = req.body
+        const files = await Recipe.files(id)
 
-        results = await Recipe.files(id)
-        const files = results.rows
-       
         // remover as imagens da pasta public
-        results.rows.map(file => fs.unlinkSync(file.path))
+        files.map(file => fs.unlinkSync(file.path))
         
-        //Remove da base de dados
-        await Recipe.deleteRecipe(id)
+        await Recipe.delete(id)
 
-        return res.redirect(`/recipes/list`)
+        return res.redirect(`/recipes/list?msgSuccess=1`)
     }
 
 }

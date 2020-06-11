@@ -17,10 +17,9 @@ async function verifyIfUserCreator(req, res, next){
     id = req.session.userId
     const user = await User.findOne({where: {id}})
 
-    results = await Recipe.findRecipe(req.params.id)
-    const recipeUserId = results.rows[0].id_user
+    const recipeUserId = await Recipe.findOne({where: {id: req.params.id }} )
 
-    if (user.id != recipeUserId) 
+    if (user.id != recipeUserId.id_user) 
         return res.redirect('/recipes/list')
     
     next()

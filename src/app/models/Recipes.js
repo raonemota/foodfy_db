@@ -1,35 +1,20 @@
 const db = require('../../config/db')
 const { date } = require('../../lib/utils')
 
+const Base = require('./Base')
+
+Base.init({ table: 'recipes'})
+
 module.exports = {
-    all(){
-       return db.query(`SELECT R.*, C.name as chef, U.name as user FROM recipes as R
-                            INNER JOIN chefs AS C
-                            ON C.id = R.id_chef
-                            INNER JOIN users AS U
-                            ON U.id = R.id_user`)
-    },
-    create(data){
-        //Monta Query principal para inserção de dados
-        const query = `INSERT INTO recipes (
-                            title,
-                            additional_info,
-                            created_at,
-                            id_chef,
-                            id_user) VALUES ( $1, $2, $3, $4, $5) 
-                        RETURNING id `
-
-        const values = [
-            data.title,
-            data.aditional_info,
-            date(Date.now()).format,
-            data.chef,
-            data.userId
-            
-        ]
-
-        return db.query(query, values)
-        
+    ...Base,
+    async allList(){
+        const results = await db.query(`SELECT R.*, C.name as chef, U.name as user 
+                                                        FROM recipes as R
+                                        INNER JOIN chefs AS C
+                                        ON C.id = R.id_chef
+                                        INNER JOIN users AS U
+                                        ON U.id = R.id_user`)
+        return results.rows
     },
     createIngred(ingred, id_recipe){
 
@@ -45,38 +30,11 @@ module.exports = {
                             VALUES ($1, $2)`, [steps, id])
 
     },
-    findRecipe(id){
-        return db.query(`SELECT R.*, C.name as chef, U.name as user FROM recipes AS R
-                            INNER JOIN chefs AS C
-                            ON C.id = R.id_chef
-                            INNER JOIN users AS U
-                            ON U.id = R.id_user
-                            where R.id = $1`, [id] )
-    },
     findIngred(id){
         return db.query(`SELECT * FROM ingred_recipes WHERE id_recipe = $1`, [id])
     },
     findSteps(id){
         return db.query(`SELECT * FROM method_of_preparation WHERE id_recipe = $1`, [id])
-    },
-    updateRecipe(data){
-                
-        //Atualiza os dados principais da receita
-        const query = `UPDATE recipes SET title=($1), additional_info=($2), id_chef=($3)
-                            WHERE id = ($4)`
-
-        const values = [
-            data.title,
-            data.aditional_info,
-            data.chef,
-            data.id
-        ]
-
-        return db.query(query, values)
-
-    },
-    deleteRecipe(id){        
-        db.query(`DELETE FROM recipes WHERE id = ($1)`, [id])
     },
     deleteIngreds(id){
         db.query(`DELETE FROM ingred_recipes WHERE id_recipe = ($1)`, [id])
@@ -120,11 +78,9 @@ module.exports = {
                     LIMIT 6`
         return db.query(query)
     },
-    findRecipesPerChef(id){
-        return db.query(`SELECT * FROM recipes WHERE id_chef = $1`, [id])
-    },
-    files(id){
-        return db.query(`SELECT * FROM files WHERE id_recipe = $1`, [id])
+    async files(id){
+        const results = await db.query(`SELECT * FROM files WHERE id_recipe = $1`, [id])
+        return results.rows
     }
 
 }

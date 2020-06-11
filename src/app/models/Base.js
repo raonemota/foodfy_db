@@ -14,12 +14,12 @@ function find(filters, table){
             })
         })  
     }
-
+    
     return db.query(query)
 
 }
 
-const Base = {
+module.exports = {
     init({ table }){
         if(!table) throw Error('Invalid Params')
         this.table = table
@@ -34,57 +34,52 @@ const Base = {
         const results = await find(filters, this.table)
         return results.rows
     },
-    // async create(fields){
+    async create(fields){
 
-    //     try {
-    //         let keys   = [],
-    //             values = []
+        try {
+            let keys   = [],
+                values = []
 
-    //         Object.keys(fields).map( key => {
-    //             keys.push(key)
-    //             values.push(fields[key])
-    //         })
+            Object.keys(fields).map( key => {
+                keys.push(key)
+                values.push(`'${fields[key]}'`)
+            })
 
-    //         const query = `INSERT INTO ${this.table} (${keys.join(',')})
-    //             VALUES (${values.join(',')})
-    //             RETURNING id`
+            const query = `INSERT INTO ${this.table} (${keys.join(',')})
+                VALUES (${values.join(',')})
+                RETURNING id`           
 
-    //         const results = await db.query(query)
-    //         return results.rows[0].id
+            const results = await db.query(query)
+            return results.rows[0].id
 
-    //     } catch (error) {
+        } catch (error) {
             
-    //     }
-    // },
-    // async update(id, fields){
+        }
+    },
+    async update(id, fields){
 
-    //     try {
+        try {
 
-    //         let update = []
+            let update = []
 
-    //         Object.keys(fields).map( key => {
+            Object.keys(fields).map( key => {
+                const line = `${key} = '${fields[key]}'`
+                update.push(line)
+            })
 
-    //             const line = `${key} = '${fields[key]}'`
-    //             update.push(line)
+            let query = `UPDATE ${this.table} SET ${update.join(',')}
+            WHERE id = ${id} RETURNING id`           
             
-    //         })
+            return db.query(query)
 
-    //         let query = `UPDATE ${this.table} SET ${update.join(',')}
-    //         WHERE id = ${id}`
-
-    //         return db.query(query)
-
-
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
+        } catch (error) {
+            console.log(error)
+        }
         
         
-    // },
-    // async delete(id){
-    //     return db.query(`DELETE FROM ${this.table} WHERE id = ${id}`)
-    // }
+    },
+    async delete(id){
+        return db.query(`DELETE FROM ${this.table} WHERE id = ${id}`)
+    }
 
 }
-
-module.exports = Base

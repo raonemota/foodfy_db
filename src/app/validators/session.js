@@ -65,6 +65,34 @@ async function updateUser(req, res, next){
 
 }
 
+async function updateChefs(req, res, next){
+        
+    const keys = Object.keys(req.body)
+
+        for(key of keys){
+            if(req.body[key] == ""){
+                return res.redirect(`/chefs/${req.body.id}/edit?msgError=1`)
+            }
+        }
+    
+    next()
+
+}
+
+async function updateRecipes(req, res, next){   
+    
+    const keys = Object.keys(req.body)
+
+    for(key of keys){
+        if(key != 'removed_files' && req.body[key] == ""){
+            return res.redirect(`/recipes/${req.body.id}/edit?msgError=1`)
+        }
+    }
+    
+    next()
+
+}
+
 async function loginUser(req, res, next){
 
     const { email, password } = req.body
@@ -172,6 +200,8 @@ async function forgot(req, res, next){
 module.exports = {
     newRegisterUser,
     updateUser,
+    updateChefs,
+    updateRecipes,
     loginUser,
     forgot
 }

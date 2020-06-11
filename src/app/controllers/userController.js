@@ -1,6 +1,7 @@
 const User = require('../models/Users')
 const crypto = require('crypto') 
 const mailer = require('../../lib/mailer')
+const { hash } = require('bcryptjs')
 
 
 module.exports = {
@@ -23,19 +24,21 @@ module.exports = {
 
         return res.render("admin/users/register", { user }) 
     },
-    async post(req, res){
-
-        const token = crypto.randomBytes(6).toString("hex")
-
-        const { name, email } = req.body
-        
-        const data = {
-            ...req.body,
-            token: token
-        }   
+    async post(req, res){ 
         
         try {
-            results = await User.create(data)
+
+            const token = crypto.randomBytes(6).toString("hex")
+
+            const { name, email, is_admin } = req.body
+            
+            const results = await User.create({
+                name,
+                email,
+                password: token,
+                is_admin: is_admin || false
+            })
+
 
             await mailer.sendMail({
                 to: email,
@@ -46,12 +49,7 @@ module.exports = {
                         <p>É necessário que você cadastre uma nova senha, basta acessar o site: <a href="http://localhost:3000/users/edit?token=${token}" target="_blank">Criar senha</a>`
             })
 
-            const users = await User.all()
-
-            return res.render("admin/users/register", {
-                success: 'Usuário foi cadastrado com sucesso. Email enviado com solicitação de nova senha.',
-                users
-            })
+            return res.redirect("/users/list?msgSuccess=1")
 
         } catch (err) {
             return res.render("admin/users/register", {
@@ -74,7 +72,7 @@ module.exports = {
             
             const user = await User.findOne({where: {password}})      
 
-            if(results.rowCount > 0){
+            if(user){
                 return res.render("admin/users/edit", { user, token: password }) 
             }else{
                 return res.redirect("/")
@@ -91,21 +89,23 @@ module.exports = {
     async edit(req, res){
 
         try {
-            
-            const { id } = req.params
-            const user = await User.findOne({where: {id}})           
 
-            if(!user)
+            //Usuário logado
+            const user = await User.findOne({where: {id: req.session.userId}})
+
+            //Usuário a ser editado
+            const profile = await User.findOne({where: {id: req.params.id}})           
+
+            if(!profile)
                 return res.redirect("/users/list?msgError=1")
 
             error = (req.query.msgError) ? 'Todos os campos devem ser preenchidos.' : ''
 
-            return res.render("admin/users/edit", { user, error })
+            return res.render("admin/users/edit", { profile, user, error })
             
         } catch (err) {
             return res.render("admin/users/list", {
                 error: `Ocorreu um erro no sistema: ${err}`,
-                user
             }) 
         }
         
@@ -114,11 +114,20 @@ module.exports = {
     async update(req, res){
 
         try {
-            
-            const data = req.body
-            results = await User.update(data)
-           
-            req.session.userId = results.rows[0].id
+
+            if (req.body.status == 0) {
+                await User.update(req.body.id, {
+                    name: req.body.name, 
+                    email: req.body.email,
+                    password: await hash(req.body.password, 8), 
+                    status: 1
+                })
+            } else {
+                await User.update(req.body.id, {
+                    name: req.body.name, 
+                    email: req.body.email,
+                })                
+            }
 
             return res.redirect("/users/list?msgSuccess=1") 
             
@@ -133,19 +142,13 @@ module.exports = {
     },
     async delete(req, res){
        
-        const { id } = req.body
-
         try {
-            await User.delete(id)
-
-            const users = await User.all()
+            await User.delete(req.body.id)
 
             return res.redirect("/users/list?msgSuccess=1") 
 
         } catch (err) {
-            return res.render("/admin/users/list", {
-                error: `Ocorreu um erro no sistema: ${err}`,
-            }) 
+            return res.redirect("/users/list?msgError=1") 
         }
         
     }

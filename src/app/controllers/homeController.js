@@ -9,8 +9,8 @@ module.exports = {
         let results = await Recipe.findRecipesMoreAccessed()
 
         async function getImage(recipeId){
-            let results = await Recipe.files(recipeId)
-            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            let files = await Recipe.files(recipeId)
+            files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
             return files[0]
         }
 
@@ -47,8 +47,8 @@ module.exports = {
         let results = await Recipe.paginate(params)
 
         async function getImage(recipeId){
-            let results = await Recipe.files(recipeId)
-            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            let files = await Recipe.files(recipeId)
+            files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
             return files[0]
         }
 
@@ -64,23 +64,22 @@ module.exports = {
 
     },
     async showRecipe(req, res){
-        const { id } = req.params
 
-        //Pega a receita na base de dados
-        results = await Recipe.findRecipe(id)
+        let recipe = await Recipe.findOne({where: {id: req.params.id}})
+        
 
         async function getImage(recipeId){
-            let results = await Recipe.files(recipeId)
-            const files = results.rows.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
+            let files = await Recipe.files(recipeId)
+            files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
            
             return files[0]
         }       
 
         //Formata data
-        const recipe = {
-            ...results.rows[0],
-            created_at: date(results.rows[0].created_at).iso,
-            img: await getImage(results.rows[0].id)
+        recipe = {
+            ...recipe,
+            created_at: date(recipe.created_at).iso,
+            img: await getImage(recipe.id)
         }  
 
         //Pega os ingredientes com base no ID da receita
@@ -91,8 +90,8 @@ module.exports = {
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 
-        results = await Recipe.files(recipe.id)
-        const files = results.rows.map(file => ({
+        let files = await Recipe.files(recipe.id)
+        files = files.map(file => ({
             ...file,
             path: `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`
         }))        
@@ -101,8 +100,7 @@ module.exports = {
 
     },
     async listChefsHome(req, res){
-        let results = await Chefs.all()
-        const chefs = results.rows      
+        const chefs = await Chefs.all()    
         
         return res.render("home/chefs", { chefs } )
     }

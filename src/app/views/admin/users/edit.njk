@@ -21,7 +21,7 @@
                 <div class="item">
                     <div>Nome</div>
                     <div>
-                        <input type="text" name="name" value="{{ user.name }}" placeholder="Digite seu nome">
+                        <input type="text" name="name" value="{{ profile.name }}" placeholder="Digite seu nome">
                     </div>
                 </div>
 
@@ -31,7 +31,7 @@
                         <input 
                             type="email" 
                             name="email" 
-                            value="{{ user.email }}" 
+                            value="{{ profile.email }}" 
                             placeholder="Digite seu email"
                             >
                     </div>
@@ -50,8 +50,8 @@
                     </div>
                 </div>
 
-                <input type="hidden" name="id" value="{{ user.id }}">
-                <input type="hidden" name="status" value="{{ user.status }}">
+                <input type="hidden" name="id" value="{{ profile.id }}">
+                <input type="hidden" name="status" value="{{ profile.status }}">
 
                 {% if (token) %}
                     <input type="hidden" name="token" value="{{ token }}">
