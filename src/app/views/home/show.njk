@@ -1,34 +1,5 @@
 {% extends "./layout.njk" %}
 
-{% block head %}
-    <title>Foodify</title>
-{% endblock %}
-
-{% block nav %}
-    <div class="nav">
-        <div class="logo"><a href="/"><img src="/imgs/logo.png" alt="Logo Foodify"></a></div>
-        <div class="links">
-            <a href="/about">Sobre</a>
-            <a class="active" href="/revenue">Receitas</a>
-        </div>
-        {# Form de busca de receita #}
-        <form action="/revenue" method="GET">
-            <input 
-                type="text"
-                name="filter"
-                placeholder="Procurar"
-                value=""
-            >
-            <button type="submit">Filtrar</button>
-        </form>
-        <div class="links">
-            <a id="btManager" href="./recipes/list">
-                <i class="material-icons">settings_applications</i>
-            </a>
-        </div>
-    </div>
- {% endblock %}
-
 {% block content %}
 
     <div class="contents">
@@ -89,7 +60,5 @@
         
         
     </div>
-
-<script src="/scripts.js"></script>
 
 {% endblock %}

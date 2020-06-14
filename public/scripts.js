@@ -121,3 +121,29 @@ const ImageGallery = {
         ImageGallery.highlight.src = target.src
     }
 }
+
+const Validate = {
+    allFields(e){
+        const items = document.querySelectorAll('.item input, .item selector, .item textarea');
+        
+        e.preventDefault()
+        for(item of items){
+            if (item.type == "file" && item.value == "") {
+                const message = document.createElement('div')
+                message.classList.add('message')
+                message.classList.add('error')
+                message.innerHTML = "Deve ser enviado pelo menos 1 imagem."
+                document.querySelector('body').append(message)
+                e.preventDefault()
+            }
+            else if (item.value == "") {
+                const message = document.createElement('div')
+                message.classList.add('message')
+                message.classList.add('error')
+                message.innerHTML = "Todos os campos são obrigatórios."
+                document.querySelector('body').append(message)
+                e.preventDefault()
+            }
+        }
+    }
+}

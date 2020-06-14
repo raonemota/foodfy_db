@@ -67,7 +67,6 @@ module.exports = {
 
         let recipe = await Recipe.findOne({where: {id: req.params.id}})
         
-
         async function getImage(recipeId){
             let files = await Recipe.files(recipeId)
             files = files.map(file => `${req.protocol}://${req.headers.host}${file.path.replace("public", "")}`)
@@ -75,18 +74,15 @@ module.exports = {
             return files[0]
         }       
 
-        //Formata data
         recipe = {
             ...recipe,
             created_at: date(recipe.created_at).iso,
             img: await getImage(recipe.id)
         }  
 
-        //Pega os ingredientes com base no ID da receita
         results = await Recipe.findIngred(recipe.id)
         const ingreds = results.rows
 
-        //Pega as etapas para preparação com base no ID da receita
         results = await Recipe.findSteps(recipe.id)
         const steps = results.rows
 

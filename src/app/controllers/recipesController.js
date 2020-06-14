@@ -46,25 +46,6 @@ module.exports = {
     }, 
     async post(req, res){
         
-        //Verifica se todos os campos estão preenchido
-        const keys = Object.keys(req.body)
-        for(key of keys){
-            if(req.body[key] == ""){
-                return res.render('admin/recipes/create', {
-                    error: 'Por favor, complete todos os dados',
-                    recipe: res.body
-                })
-            }
-        }
-
-        // Verifica se foi enviado alguma imagem
-        if(req.files.length == 0)
-            return res.render('admin/create', {
-                error: 'Por favor, Envie pelo menos uma imagem',
-                recipe: res.body
-            })
-
-        
         const { title, additional_info, chef } = req.body
 
         result = await Recipe.create({
@@ -173,12 +154,10 @@ module.exports = {
             await Recipe.deleteIngreds(req.body.id)
             await Recipe.deleteSteps(req.body.id)
             
-            //Cadastra todas os ingredientes cadastrados
             const ingredientes = req.body.ingredients     
             const addIngredPromise = ingredientes.map(ingred => Recipe.createIngred(ingred, req.body.id))
             await Promise.all(addIngredPromise)
             
-            //Cadastra todas os etapas cadastradas
             const steps = req.body.method_of_preparation     
             const addStepsPromise = steps.map(step => Recipe.createSteps(step, req.body.id))
             await Promise.all(addStepsPromise)
