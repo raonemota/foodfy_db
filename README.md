@@ -64,6 +64,6 @@ npm start
 
 # LICENSE
 
-This project is under the MIT license. See the [LICENSE](https://github.com/raonemota/foodfy_db/blob/master/LICENSE) for details.
+This project is under the MIT license. See the [LICENSE](https://github.com/raonemota/foodfy_db/blob/master/LICENSE.md) for details.
 
 
