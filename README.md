@@ -2,9 +2,40 @@
     <img src="https://ik.imagekit.io/h4s3kgnkax/logo_vGtLirxTS.png">
 </h1>
 
+<h4 align="center"> 
+	LaunchBase Bootcamp 🚀
+</h4>
+<p align="center">
+ 
+ <img alt="GitHub language count" src="https://img.shields.io/github/languages/count/raonemota/foodfy_db?color=%2304D361">
+  
+ <img alt="Repository size" src="https://img.shields.io/github/repo-size/raonemota/foodfy_db">
+
+  <a href="https://github.com/raonemota/foodfy_db/commits/master">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/raonemota/foodfy_db">
+  </a>
+  
+  <img alt="License" src="https://img.shields.io/badge/license-MIT-brightgreen">
+</p>
+
+<div align="center">
+  <img src="http://i.picasion.com/pic90/867803cf7204fdbb9f41584fc1a71747.gif"/>
+</div>
+
 # Goal
 
 **Foodify** is a recipe site with a system administrator, which was developed with the knowledge acquired in the classes of the **Rocketseat Launch Base**.
+
+## Features
+
+- [x] Dynamic pages and content powered by Nunjucks.
+- [x] Database powered by Postgresql.
+- [x] Being able to add new recipes, update and delete them.
+- [x] Search recipes.
+- [x] Upload images to database using Multer.
+- [x] Complete login system, with administrators and regular users.
+- [x] Routes are safe thanks to Validators.
+- [x] Nodemailer to reset and recover passwords.
 
 
 ## 🚀 Technologies
