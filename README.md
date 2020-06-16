@@ -38,7 +38,7 @@
 - [x] Nodemailer to reset and recover passwords.
 
 
-## 🚀 Technologies
+## 🚀  Technologies
 
 The project was developed using the following technologies:
 
@@ -49,7 +49,7 @@ The project was developed using the following technologies:
 - [Faker.js](https://github.com/marak/Faker.js/)
 - [Postgres](https://node-postgres.com/)
 
-## 📦 Vamos começar ?
+## 📦  Vamos começar ?
 
 You need the following tools installed in order to run this project: [Node.js + NPM](https://nodejs.org/), [PostgresSQL](https://node-postgres.com/), and [Postbird](https://github.com/Paxa/postbird).
 
@@ -93,7 +93,7 @@ The admin user for test is admin@foodfy.com.br and password is 1234.
 npm start
 ```
 
-# LICENSE
+## LICENSE
 
 This project is under the MIT license. See the [LICENSE](https://github.com/raonemota/foodfy_db/blob/master/LICENSE.md) for details.
 
